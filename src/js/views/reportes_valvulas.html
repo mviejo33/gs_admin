@@ -1,0 +1,39 @@
+<div data-bind="ojModule: { name: 'dialog_valvula', params: $data }"></div>
+<div data-bind="ojModule: { name: 'dialog_modelo', params: $data }"></div>
+<!-- <div>
+    <input id="search" maxlength="30" placeholder="Buscar..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+    <oj-button id="clearButton" style="display: inline-block;" on-click='[[getValvulasPaging]]' display='icons' chroming='half'>
+        <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+    </oj-button>
+</div> -->
+
+
+<div class='oj-flex-bar'>
+    <div class='oj-flex-bar-start'>
+        <h3>Válvulas instaladas</h3>
+    </div>
+    <div class='oj-flex-bar-end'>
+            <oj-menu-button id="aa" slot="menu" display='icons' contextmenu="reportes-contextmenu" chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-grid'></span> Descargar a excel
+            <oj-menu id="myMenu" slot="menu" style="display:none" on-oj-action="[[contextmenu2_action]]">
+                <oj-option value="valvulas">Descargar válvulas instaladas</oj-option>
+                <oj-option value="acciones">Descargar acciones</oj-option>
+                <oj-option value="modelos">Descargar modelos</oj-option>
+            </oj-menu>
+        </oj-menu-button>
+
+        <oj-button data-bind="" on-click='[[openModeloDialog]]' id="alta-modelo-button" style="display:inline-block; margin-top: 0px;margin-right: 10px; width: 100%;max-width: 100%;" class="oj-margin-top">
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-arrowbox-n'></span> Modelo
+        </oj-button>
+        <oj-button data-bind="" on-click='[[openValvulaDialog]]' id="alta-valvula-button" style="display:inline-block; margin-top: 0px;margin-right: 10px; width: 100%;max-width: 100%;" class="oj-margin-top">
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-arrowbox-n'></span> Válvula
+        </oj-button>
+    </div>
+</div>
+<oj-table id="valvulas-paging-table" aria-label="Tabla de ultimas lecturas" data='[[dataprovider]]' columns='{{valvulasColumnArray}}' display='grid' contextmenu="valvulas-contextmenu" selection-mode='{"row": "single"}' style='height: 640px; width: 1px; min-width: 100%;'>
+<oj-menu id="valvulas-contextmenu" slot="contextMenu" on-oj-action="[[contextmenu_action]]" on-oj-before-open="[[contextmenu_beforeOpen]]" style="display:none">
+            <oj-option value="Detalle cliente">Asignar válvula sucesora</oj-option>
+        </oj-menu>
+    <oj-paging-control id="paging" data='[[dataprovider]]' slot='bottom' page-size='15'>
+</oj-table>

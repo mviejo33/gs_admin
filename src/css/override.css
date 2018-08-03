@@ -1,0 +1,114 @@
+/*
+    Document   : override
+    Created on : <date>
+    Author     : <author>
+    Description:
+        This is where any of your application specific styles should be included
+*/
+
+#appNameContainer {
+    margin-left: 3%;
+    width: 100%;
+}
+
+.oj-table-grid-display .oj-table-body-row, .oj-table-editable .oj-table-body-row {
+    height: 0.5em !important;
+
+}
+
+.oj-table-body-current-row .oj-selected{
+    background-color: #ffe8c1 !important;
+}
+
+.oj-table-body-row .oj-selected {
+    background-color: #ffe8c1 !important;
+}
+
+
+.cssanimations.csstransforms #note {
+    -webkit-transform: translateY(-50px);
+    -webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
+    -moz-transform:    translateY(-50px);
+    -moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;
+}
+
+.gls-icon {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    vertical-align: middle !important;
+}
+
+.gls-logo {
+    width: 220px;
+    height: 35px;
+    vertical-align: middle !important;
+}
+
+.oj-hybrid-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.pedido-title {
+    font-size: 1.3em;
+    margin-bottom: 5px;
+}
+
+.oj-web-applayout-max-width {
+    max-width: 1200px;
+}
+
+.inline-element {
+    display: inline-block;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.waggle {
+    animation: waggle 1s 0s forwards ease-out;
+}
+
+.data span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.data {
+    font-size: 0.9em;
+}
+
+@keyframes waggle {
+    0% {
+        transform: none;
+    }
+    50% {
+        transform: rotateZ(-20deg) scale(1.2);
+    }
+    60% {
+        transform: rotateZ(25deg) scale(1.2);
+    }
+    67.5% {
+        transform: rotateZ(-15deg) scale(1.2);
+    }
+    75% {
+        transform: rotateZ(15deg) scale(1.2);
+    }
+    82.5% {
+        transform: rotateZ(-12deg) scale(1.2);
+    }
+    85% {
+        transform: rotateZ(0) scale(1.2);
+    }
+    100% {
+        transform: rotateZ(0) scale(1);
+    }
+}
+
+.start-now,
+.start-now:after {
+    animation-delay: 0;
+}

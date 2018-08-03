@@ -1,0 +1,336 @@
+<div data-bind="ojModule: { name: 'dialog_loading', params: $data }"></div>
+<div data-bind="ojModule: { name: 'dialog_totales', params: $data }"></div>
+<div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+    <!--     <div id="parentContainer" style="padding:10px">
+        <h3>Alta de estado de cuentas</h3>
+        <oj-file-picker on-oj-select='[[filePickerListener]]'>
+        </oj-file-picker>
+        <div style="padding-top:8px"></div>
+        <div style="padding-top:8px">
+            <label for="selected">Archivo seleccionado: </label>
+            <span id="selected" data-bind="text: fileName() ? fileName() : 'No se ha cargado ningún archivo'"></span>
+            <input id="altaedocuenta-button" style="display:inline-block; margin-top: 0px;" class="oj-margin-top" type="button" data-bind="click: uploadFile, ojComponent: {component: 'ojButton', disabled: shouldDisableSubmit(), label: 'Subir'}" />
+        </div>
+    </div>
+ -->
+    <div class='oj-flex-bar'>
+        <div class='oj-flex-bar-start'>
+            <h3>Resumen de cuentas por mes</h3>
+        </div>
+        <div class='oj-flex-bar-end'>
+            <oj-file-picker id="fileupload" style="margin-right: 2px;" selectOn='click' on-oj-select='[[filePickerListener]]'>
+                <oj-button slot='trigger'>
+                    <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-arrowbox-n'></span> EdoCuenta
+                </oj-button>
+            </oj-file-picker>
+            <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                Estado de cuenta subido con éxito!
+            </div>
+            <div style="display:none;" id="fail-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                No se pudo subir estado de cuenta
+            </div>
+            <oj-button data-bind="" on-click='[[openTotalesDialog]]' id="totales-button" style="display:inline-block; margin-top: 0px;margin-right: 10px; width: 100%;max-width: 100%;" class="oj-margin-top">
+                <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-arrowbox-n'></span> Totales de mes
+            </oj-button>
+            <oj-label id="mainlabelid" class="oj-label-inline">Año</oj-label>
+            <select autocomplete="off" required id="ano-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            optionChange: handleAnoOptionChange,
+                            value: ano}">
+                <!-- ko foreach: anos -->
+                <option data-bind="value:value, text:label"></option>
+                <!-- /ko -->
+            </select>
+        </div>
+    </div>
+    <oj-table id="resumenmes-paging-table" aria-label="Tabla de resumenmes" data='[[dataproviderResumenMes]]' columns='{{resumenMesColumnArray}}' display='grid' selection-mode='{"row": "single"}' style='height: 225px; width: 1px; min-width: 100%;'>
+        <oj-paging-control id="paging-resumenmes" data='[[dataproviderResumenMes]]' slot='bottom' page-size='10'>
+    </oj-table>
+    <h3>Detalle de mes</h3>
+    <div>
+        <input id="search" maxlength="30" placeholder="Buscar por cargo, abono o día..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: searchValueDetalleMes}" />
+        <oj-button id="clearButton" style="display: inline-block;" on-click='[[getDetalleMesPaging]]' display='icons' chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+        </oj-button>
+        <div style="float:right;">
+            <oj-button id="aa" display='icons' on-click='[[downloadDetalleMes]]' chroming='half'>
+                <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-grid'></span> Descargar a excel
+            </oj-button>
+        </div>
+    </div>
+    <oj-table id="detallemes-paging-table" aria-label="Tabla de detallemes" data='[[dataproviderDetalleMes]]' columns='{{detalleMesColumnArray}}' display='grid' selection-mode='{"row": "single"}' style='height: 225px; width: 1px; min-width: 100%;'>
+        <oj-paging-control id="paging-detallemes" data='[[dataproviderDetalleMes]]' slot='bottom' page-size='10'>
+    </oj-table>
+    <oj-buttonset-one id="listview-buttonset" style="margin-top: 15px;" value="{{activeTable}}">
+        <!-- ko foreach: tables -->
+        <oj-option disabled="[[disabled]]" value='[[value]]'>
+            <span data-bind="text: label"></span>
+        </oj-option>
+        <!-- /ko -->
+    </oj-buttonset-one>
+    <div data-bind="visible:  activeTable() == 'cortes'">
+        <div class="oj-flex oj-flex-items-pad">
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Por conciliar</h3>
+                    <!--  <oj-table id="cortesTable" row-renderer='[[rowRenderer]]' display='grid' data='[[tableCoDataProvider]]' edit-mode='rowEdit' style='height: 200px; width: 1px; min-width: 100%;' columns='{{tableCoColumnArray}}'>
+                    </oj-table> -->
+                    <div>
+                        <div class="oj-flex oj-flex-items-pad">
+                            <div class="oj-md-4">
+                                <input id="searchPva" style="max-width: 80%;" maxlength="30" placeholder="Buscar por pva..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: searchCortesPva, disabled: collectionCortes() == undefined}" />
+                            </div>
+                            <div class="oj-md-4">
+                                <oj-input-date id="searchCortesDia" value={{searchCortesDia}} placeholder="Buscar por día..." style="width: 80%;max-width: 100%;" date-picker=[[datePicker]] disabled=[[!collectionCortes()]] max="[[dateRangeToValue]]">
+                                    <!-- <input id="searchDia"  style="max-width: 80%;" maxlength="30" placeholder="Buscar por día..." , data-bind="ojComponent: { -->
+                                    <!-- component: 'ojInputText', value: searchCortesDia, disabled: collectionCortes() == undefined}" /> -->
+                            </div>
+                            <div class="oj-md-3">
+                                <input id="searchTurno" style="max-width: 100%;" maxlength="30" placeholder="Buscar por turno..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: searchCortesTurno, disabled: collectionCortes() == undefined}" />
+                            </div>
+                            <div class="oj-md-1">
+                                <oj-button id="clearButton" style="display: inline-block;" disabled="[[collectionCortes() == undefined]]" on-click='[[getCortesPaging]]' display='icons' chroming='half'>
+                                    <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+                                </oj-button>
+                            </div>
+                        </div>
+                    </div>
+                    <oj-table id="cortesTable" aria-label="Tabla de cortes" row-renderer='[[rowRenderer]]' data='[[dataproviderCortes]]' columns='{{tableCoColumnArray}}' edit-mode='rowEdit' display='grid' style='height: 225px; width: 1px; min-width: 100%;'>
+                        <oj-paging-control id="paging" data='[[dataproviderCortes]]' slot='bottom' page-size='10'>
+                    </oj-table>
+                </div>
+            </div>
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Conciliado</h3>
+                    <oj-table id="cortesTable2" data='[[table2CoDataProvider]]' columns='{{tableCo2ColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                    </oj-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-bind="visible:  activeTable() == 'pagos'">
+        <div class="oj-flex oj-flex-items-pad">
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Por conciliar</h3>
+                    <oj-table id="pagosTable" display='grid' data='[[tablePaDataProvider]]' selection-mode='{ "row": "single", "column": "multiple" }' style='height: 200px; width: 1px; min-width: 100%;' columns='{{tablePaColumnArray}}'>
+                    </oj-table>
+                </div>
+            </div>
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Conciliado</h3>
+                    <oj-table id="pagosTable2" data='[[table2PaDataProvider]]' columns='{{table2PaColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                    </oj-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-bind="visible:  activeTable() == 'dolares'">
+        <div class="oj-flex oj-flex-items-pad">
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Por conciliar</h3>
+                    <oj-table id="dolaresTable" display='grid' data='[[tableDoDataProvider]]' selection-mode='{ "row": "single", "column": "multiple" }' style='height: 200px; width: 1px; min-width: 100%;' columns='{{tableDoColumnArray}}'>
+                    </oj-table>
+                </div>
+            </div>
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Conciliado</h3>
+                    <oj-table id="dolaresTable2" data='[[table2DoDataProvider]]' columns='{{table2DoColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                    </oj-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-bind="visible:  activeTable() == 'polizas'">
+        <div class="oj-flex oj-flex-items-pad">
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Por conciliar</h3>
+                    <oj-table id="polizasTable" display='grid' data='[[tablePoDataProvider]]' selection-mode='{ "row": "single", "column": "multiple" }' style='height: 200px; width: 1px; min-width: 100%;' columns='{{tablePoColumnArray}}'>
+                    </oj-table>
+                </div>
+            </div>
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Conciliado</h3>
+                    <oj-table id="polizasTable2" aria-label="Tabla dinamica 2" data='[[table2PoDataProvider]]' columns='{{table2PoColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                    </oj-table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-bind="visible:  activeTable() == 'traspasos'">
+        <div class="oj-flex oj-flex-items-pad">
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Por conciliar</h3>
+                    <oj-table id="traspasosTable" display='grid' data='[[tableTrDataProvider]]' selection-mode='{ "row": "single", "column": "multiple" }' style='height: 200px; width: 1px; min-width: 100%;' columns='{{tableTrColumnArray}}'>
+                    </oj-table>
+                </div>
+            </div>
+            <div class="oj-md-6">
+                <div style="width: 1px; min-width: 100%;">
+                    <h3>Conciliado</h3>
+                    <oj-table id="traspasosTable2" aria-label="Tabla dinamica 2" data='[[table2TrDataProvider]]' columns='{{table2TrColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                    </oj-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialog-bancomer-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogWrapper">
+            <oj-dialog style="display:none" cancel-behavior="none" on-oj-before-open='[[dialog.beforeOpen]]' id="dialog-bancomer" oj-dialog-header='[[dialog.title]]'>
+                <div slot="header" class="oj-helper-clearfix"> <span id="dialogTitleId" data-bind="text: dialog.title" class="oj-dialog-title"> </span> </div>
+                <div slot="body">
+                    <div data-bind="text: dialog.body"></div>
+                    <select autocomplete="off" style="padding-top: 8px;" required id="cuentaBancomer-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: dialog.cuentaBancomer,
+                            placeholder: 'Selecciona una cuenta bancomer'}">
+                        <!-- ko foreach: dialog.cuentasBancomer -->
+                        <option data-bind="value:value, text:label"></option>
+                        <!-- /ko -->
+                    </select>
+                </div>
+                <div slot="footer">
+                    <oj-button id="okButton" data-bind="click: handleOkClose"> OK </oj-button>
+                </div>
+            </oj-dialog>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="editRowTemplate">
+    <tr>
+        <!-- ko if: $parent.activeTable() == 'cortes' -->
+        <!--         <td data-bind="text: corte">
+        </td> -->
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: pventa">
+        </td>
+        <td data-bind="text: turno">
+        </td>
+        <td>
+            <oj-input-text id="it2" value='{{x_asignar}}' data-oj-context>
+            </oj-input-text>
+        </td>
+        <!-- /ko -->
+    </tr>
+</script>
+<script type="text/html" id="rowTemplateCortes">
+    <tr>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: pventa">
+        </td>
+        <td data-bind="text: turno">
+        </td>
+        <td data-bind="text: x_asignar">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplate2Cortes">
+    <tr>
+        <td data-bind="text: corte">
+        </td>
+        <td data-bind="text: importe">
+        </td>
+        <td data-bind="text: x_corte">
+        </td>
+        <td data-bind="text: x_deposito">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplatePagos">
+    <tr>
+        <td data-bind="text: cliente">
+        </td>
+        <td data-bind="text: nombre">
+        </td>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: pventa">
+        </td>
+        <td data-bind="text: nocheque">
+        </td>
+        <td data-bind="text: x_conciliar">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplate2Pagos">
+    <tr>
+        <td data-bind="text: cliente">
+        </td>
+        <td data-bind="text: nombre">
+        </td>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: pventa">
+        </td>
+        <td data-bind="text: nocheque">
+        </td>
+        <td data-bind="text: conciliado">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplateTraspasos">
+    <tr>
+        <td data-bind="text: diabanco">
+        </td>
+        <td data-bind="text: nombre">
+        </td>
+        <td data-bind="text: cuenta">
+        </td>
+        <td data-bind="text: abono">
+        </td>
+        <td data-bind="text: cargo">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplate2Traspasos">
+    <tr>
+        <td data-bind="text: diabanco">
+        </td>
+        <td data-bind="text: nombre">
+        </td>
+        <td data-bind="text: cuenta">
+        </td>
+        <td data-bind="text: abono">
+        </td>
+        <td data-bind="text: cargo">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplateDolares">
+    <tr>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: pventa">
+        </td>
+        <td data-bind="text: corte">
+        </td>
+        <td data-bind="text: turno">
+        </td>
+        <td data-bind="text: x_asignar">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplate2Dolares">
+    <tr>
+        <td data-bind="text: abono">
+        </td>
+        <td data-bind="text: corte">
+        </td>
+        <td data-bind="text: concliado">
+        </td>
+    </tr>
+</script>

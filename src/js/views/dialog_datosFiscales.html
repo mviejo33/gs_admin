@@ -1,0 +1,20 @@
+<div id="dialog-timbre-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogWrapper">
+            <oj-dialog style="display:none" on-oj-before-open='[[beforeOpen]]' id="dialog-timbre" title="Procesando timbrado">
+                <div slot="body">
+                    <div data-bind="text: message"></div>
+                    <center>
+                        <oj-progress style="width:35px;height:35px;padding-top:15px;" data-bind="visible: isLoading() == true" class="oj-progress-bar-embedded" type='circle' id="progressbar" value="-1">
+                        </oj-progress>
+                    </center>
+                </div>
+                <div slot="footer">
+                    <oj-button id="okButton" data-bind="click: handleOkClose">
+                        OK
+                    </oj-button>
+                </div>
+            </oj-dialog>
+        </div>
+    </div>
+</div>

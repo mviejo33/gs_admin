@@ -1,0 +1,16 @@
+<div data-bind="ojModule: { name: 'dialog_timbre', params: $data }"></div>
+<div id="pagos-table-wrapper">
+    <h3>Pagos</h3>
+    <div>
+        <input id="search" maxlength="30" placeholder="Buscar pagos..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+        <oj-button id="clearButton" style="display: inline-block;" on-click='[[getPagosPaging]]' display='icons' chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+        </oj-button>
+        <input id="contado-button" style="margin-top: 0px;" class="oj-margin-top" type="button" data-bind="click: timbraPago, ojComponent: {component: 'ojButton', disabled: shouldDisableSubmit(), label: 'Timbra',
+                                rootAttributes: {style:'max-width:100%'}}" />
+    </div>
+    <oj-table id="pagos-paging-table" aria-label="Tabla de pagos" data='[[dataprovider]]' columns='{{pagosColumnArray}}' display='grid' selection-mode='{"row": "single"}' style='height: 450px; width: 1px; min-width: 100%;'>
+        <oj-paging-control id="paging" data='[[dataprovider]]' slot='bottom' page-size='10'>
+    </oj-table>
+</div>

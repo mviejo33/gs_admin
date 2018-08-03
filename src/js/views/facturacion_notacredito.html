@@ -1,0 +1,138 @@
+<div data-bind="ojModule: { name: 'dialog_timbre', params: $data }"></div>
+<div id="facturas-table-wrapper">
+    <h3>Historial de facturas</h3>
+    <input id="search" maxlength="30" placeholder="Buscar clientes..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+    <oj-button id="clearButton" on-click='[[getFacturasPaging]]' display='icons' chroming='half'>
+        <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+    </oj-button>
+    <input id="notacredito-button" style="margin-top: 0px;" class="oj-margin-top" type="button" data-bind="click: facturaNotaCredito, ojComponent: {component: 'ojButton', disabled: shouldDisableSubmit(), label: 'Timbra',
+                                rootAttributes: {style:'max-width:100%'}}" />
+    <oj-table id="facturas-paging-table" aria-label="Tabla de facturas" data='[[dataprovider]]' columns='{{facturasColumnArray}}' display='grid' selection="[[currentSelectedFactura]]" selection-mode='{"row": "single"}' style='height: 450px; width: 1px; min-width: 100%;'>
+        <oj-paging-control id="paging" data='[[dataprovider]]' page-size='10' slot='bottom'>
+    </oj-table>
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div data-bind="visible: conceptosArray().length > 0">
+            <oj-label for="to">Descripción</oj-label>
+            <div>
+                <input id="descripcion-inputtext" maxlength="40" placeholder="Ingresa la descripcion" , data-bind="ojComponent: {
+                        value: descripcion,
+                        component: 'ojInputText'
+                       }" />
+            </div>
+            <oj-label for="switch-remisiones" class="oj-label oj-label-inline">Vista por remisiones</oj-label>
+            <oj-switch style="margin-bottom: 3px;" id="switch-virtual" value="{{showRemisiones}}"></oj-switch>
+            <br>
+            <div data-bind="visible: !showRemisiones()">
+                <oj-table id="conceptos-table" row-renderer='[[rowRenderer]]' aria-label="Tabla de conceptos" data='[[conceptosDataProvider]]' edit-mode='rowEdit' columns='                                   
+                [{"headerText": "Concepto",
+                 "headerStyle": "min-width: 8em; max-width: 8em; width: 8em",
+                   "headerClassName": "oj-helper-text-align-end",
+                   "style": "min-width: 8em; max-width: 8em; width: 8em",
+                   "field": "descripcion",
+                   "className": "oj-helper-text-align-end oj-read-only"},
+                  {"headerText": "Valor unitario",
+                   "headerStyle": "min-width: 8em; max-width: 8em; width: 8em",
+                   "field": "valorunitario",
+                   "style": "min-width: 8em; max-width: 8em; width: 8em"},
+                  {"headerText": "Cantidad",
+                   "headerStyle": "min-width: 12em; max-width: 12em; width: 12em",
+                   "field": "cantiidad",
+                   "headerClassName": "oj-helper-text-align-end",
+                   "style": "min-width: 12em; max-width: 12em; width: 12em",
+                   "className": "oj-helper-text-align-end"},
+                  {"headerText": "Unidad",
+                   "headerStyle": "min-width: 7em; max-width: 7em; width: 7em",
+                   "field": "unidad",
+                   "style": "min-width: 7em; max-width: 7em; width: 7em"},
+                  {"headerText": "Importe",
+                   "headerStyle": "min-width: 8em; max-width: 8em; width: 8em",
+                   "field": "importe",
+                   "style": "min-width: 8em; max-width: 8em; width: 8em"},
+                   {"headerText": "Importe a timbrar",
+                   "headerStyle": "min-width: 8em; max-width: 8em; width: 8em",
+                   "field": "importeCalculado",
+                   "style": "min-width: 8em; max-width: 8em; width: 8em"},
+                  {"headerText": "Incluir",
+                   "headerStyle": "min-width: 8em; max-width: 8em; width: 8em",
+                   "field": "incluirEnNC",
+                   "style": "min-width: 8em; max-width: 8em; width: 8em"}
+                  ]'>
+                </oj-table>
+            </div>
+            <div data-bind="visible: showRemisiones()">
+                <div class="oj-flex oj-flex-items-pad">
+                    <div class="oj-md-6">
+                        <div style="width: 1px; min-width: 100%;">
+                            <h3>Remisiones y/o descargas de cliente</h3>
+                            <oj-table id="porFacturar-table" aria-label="PorFacturar Tabla" data='[[porFacturarDataProvider]]' columns='{{porFacturarColumnArray}}' display='grid' style='height: 200px;' selection-mode='{"row": "single", "column": "multiple"}'>
+                            </oj-table>
+                        </div>
+                    </div>
+                    <div class="oj-md-6">
+                        <div style="width: 1px; min-width: 100%;">
+                            <h3>Remisiones y/o descargas a timbrar</h3>
+                            <oj-table id="aFacturar-table" aria-label="AFacturar Tabla" data='[[aFacturarDataProvider]]' columns='{{porFacturarColumnArray}}' display='grid' style='height: 200px;' selection-mode='{"row": "single", "column": "multiple"}'>
+                            </oj-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="rowTemplate">
+    <tr>
+        <td data-bind="text: descripcion">
+        </td>
+        <td data-bind="text: valorunitario">
+        </td>
+        <td data-bind="text: cantiidad">
+        </td>
+        <td data-bind="text: unidad">
+        </td>
+        <td data-bind="text: importe">
+        </td>
+        <td data-bind="text: importeCalculado">
+        </td>
+        <td>
+            <oj-checkboxset value="{{incluirEnNC}}">
+                <span class="oj-choice-item">
+                      <input data-bind="attr:{
+                              id: 'checkbox' + $context.rowContext.status.rowIndex}"
+                             type="checkbox" value="checked" aria-label="Primary"></input>
+                    </span>
+            </oj-checkboxset>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="editRowTemplate">
+    <tr>
+        <td data-bind="text: descripcion">
+        </td>
+        <td>
+            <oj-input-text id="it2" value='{{valorunitario}}' data-oj-context>
+            </oj-input-text>
+        </td>
+        <td>
+            <oj-input-text id="it3" value='{{cantiidad}}' data-oj-context>
+            </oj-input-text>
+        </td>
+        <td data-bind="text: unidad">
+        </td>
+        <td data-bind="text: importe">
+        </td>
+        <td data-bind="text: importeCalculado">
+        </td>
+        <td>
+            <oj-checkboxset value="{{incluirEnNC}}">
+                <span class="oj-choice-item">
+                      <input data-bind="attr:{
+                              id: 'checkbox' + $context.rowContext.status.rowIndex}"
+                             type="checkbox" value="checked" aria-label="Primary"></input>
+                    </span>
+            </oj-checkboxset>
+        </td>
+    </tr>
+</script>
+<!-- <div data-bind="ojModule: { name: 'dialog_timbre', params: {'promise': promiseCancelacion, 'dialog': {'title': 'Procesando cancelación', body: 'Se está procesando la cancelación...'}}}"></div> -->

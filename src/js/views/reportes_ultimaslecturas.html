@@ -1,0 +1,24 @@
+<h3>Últimas lecturas</h3>
+<div>
+    <input id="search" maxlength="30" placeholder="Buscar lecturas..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+    <oj-button id="clearButton" style="display: inline-block;" on-click='[[getultimasLecturasPaging]]' display='icons' chroming='half'>
+        <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+    </oj-button>
+    <div style="float:right;">
+        <oj-menu-button id="aa" slot="menu" display='icons' contextmenu="reportes-contextmenu" chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-grid'></span> Descargar a excel
+            <oj-menu id="myMenu" slot="menu" style="display:none" on-oj-action="[[contextmenu_action]]">
+                <oj-option value="web_ultimas_lecturas">Descargar últimas lecturas</oj-option>
+            </oj-menu>
+        </oj-menu-button>
+        <!--  <oj-menu id="reportes-contextmenu" slot="contextMenu" on-oj-action="[[contextmenu_action]]" on-oj-before-open="[[contextmenu_beforeOpen]]" style="display:none" aria-label="Detalle cliente">
+            <oj-option value="Detalle cliente">Descargar acciones</oj-option>
+            <oj-option value="Detalle cliente">Descargar válvulas instaladas</oj-option>
+            <oj-option value="Detalle cliente">Descargar modelos</oj-option>
+        </oj-menu> -->
+    </div>
+</div>
+<oj-table id="ultimaslecturas-paging-table" aria-label="Tabla de ultimas lecturas" data='[[dataprovider]]' columns='{{ultimasLecturasColumnArray}}' display='grid'  contextmenu="ultimaslecturas-contextmenu" selection-mode='{"row": "single"}' style='height: 640px; width: 1px; min-width: 100%;'>
+    <oj-paging-control id="paging" data='[[dataprovider]]' slot='bottom' page-size='15'>
+</oj-table>

@@ -1,0 +1,133 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-hybrid-padding">
+    <div id="listviewqueries-buttonset" class="oj-buttonset-width-auto" aria-label="Choose only one setting." aria-controls="listview" data-bind="ojComponent: {component: 'ojButtonset', checked: activelistViewQuery, optionChange: handleListViewQueryOptionChange}">
+        <!-- ko foreach: listViewQueries -->
+        <label data-bind="attr: {for: id}"></label>
+        <input type="radio" name="cardStyle" data-bind="value: value, attr: {id: id},
+                   ojComponent: {component: 'ojButton', label: label}" />
+        <!-- /ko -->
+    </div>
+    <h1 data-bind="text: currentTitle"></h1>
+    <div class="oj-flex">
+        <div class="oj-flex-item oj-lg-12">
+            <ul contextmenu="pedidos-contextmenu" id="pedidos-listview" contextaria-label="pedidos list view" data-bind="ojComponent: {component: 'ojListView', optionChange: pedidosPendientesOptionChange, data: pedidosPendientesDataSource, item: {template: 'pedidos_template'}, selectionMode: 'single', rootAttributes: {style: 'height:45vh;'} }">
+            </ul>
+
+            <ul id="pedidos-contextmenu" style="display:none" aria-label="pedidos" data-bind="ojComponent: {component: 'ojMenu', beforeOpen:beforeOpenContextMenu, select: pedidosContextMenuFunction}">
+                <li><a href="#">Asignar a punto de venta</a></li>
+                <!-- ko if: canEndSelectedPedido() == true -->
+                <li><a href="#">Finalizar</a></li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    </div>
+    <h1 data-bind="text: 'Historial de asignaciones de pedido ' + pedidoSeleccionado() "></h1>
+    <table id="historial-table" summary="table-historial" aria-label="historial list view" data-bind="ojComponent: {component: 'ojTable', data: pedidoHistorialDataSource, selectionMode: 'single', rootAttributes: {style: 'width:100%;height:27vh;'},columns: [{headerText: 'Pedido', 
+                                                                           field: 'pedido', 
+                                                                           id: 'column1'},
+                                                                          {headerText: 'Punto de venta', 
+                                                                           field: 'pva', 
+                                                                           id: 'column2'},
+                                                                          {headerText: 'Fecha asignacion', 
+                                                                           field: 'tsini', 
+                                                                           id: 'column3'},
+                                                                          {headerText: 'Fecha finalizacion', 
+                                                                           field: 'tsfin', 
+                                                                           id: 'column3'}
+                                                                           ]} ">
+    </table>
+</div>
+
+
+
+<div id="dialogWrapper">
+    <div style="display:none" id="asignarpedido-dialog" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', title:'Asignar pedido ' + pedidoSeleccionado(), rootAttributes: { style: 'width: 300px; min-width 240px; max-width: 350px; min-height: 100px; max-height: 80vh;'}}">
+        <div class="oj-dialog-body">
+            <p>Selecciona el punto de venta al que será asignado el pedido</p>
+            <input id="filterPvas" maxlength='30' placeholder="Buscar punto de venta..." data-bind="event: {keyup: handleKeyUp}, textInput: filterPvaValue, ojComponent:{component:'ojInputText'}"/>
+            <table id="pvas" summary="Pvas" aria-label="Pedidos Pendientes" data-bind="ojComponent: {component: 'ojTable', 
+                                data: pvasDataSource, 
+                                optionChange: pvasOptionChange,
+                                rootAttributes: {'style': 'height:50vh;'},
+                                selectionMode: {row: 'multiple', column: 'multiple'}, 
+                                columns: [{headerText: 'Pva', 
+                                           field: 'pva', 
+                                           id: 'column1'},
+                                          {headerText: 'Planta', 
+                                           field: 'planta', 
+                                           id: 'column2'},
+                                          {headerText: 'Desde', 
+                                           field: 'desde', 
+                                           id: 'column3'}
+                                           ]}">
+            </table>
+            <div id="pva-asignado-container">
+                <h4 class="oj-padding-top inline-element  ">Punto de venta: </h4>
+                <h4 id="pva-asignado" class="inline-element italic" data-bind="text: pvaAsignado()"></h4>
+            </div>
+            <!--         <button id="button" data-bind="click: submit, 
+                       ojComponent: { component: 'ojButton', label: 'Asignar pedido' }">
+        </button> -->
+        </div>
+        <div class="oj-dialog-footer">
+            <button id="button-asignarpedido" data-bind="click: asignarPedido, ojComponent: {component: 'ojButton', label: 'Asignar'}"> </button>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="pedidos_template">
+    <li data-bind="attr: {id: 'pedido-' + pedido}">
+        <div class="oj-flex">
+            <div class="oj-lg-12">
+                <div class="oj-flex row">
+                    <div class="oj-lg-12">
+                        <div class="pedido-title" data-bind="text: 'Pedido '+ pedido"></div>
+                    </div>
+                </div>
+                <div class="oj-flex row">
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Nombre: </b><span data-bind="text: nombre"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Telefono: </b><span data-bind="text: telefono"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Estado: </b><span data-bind="text: estado"></span></span>
+                    </div>
+                </div>
+                <div class="oj-flex row">
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Ciudad: </b><span data-bind="text: ciudad"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Colonia: </b><span data-bind="text: colonia"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Calle: </b><span data-bind="text: calle"></span></span>
+                    </div>
+                </div>
+                <div class="oj-flex">
+                    <div class="oj-lg-4">
+                        <span class="data"><b>CPostal: </b><span data-bind="text: cpostal"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Entre calles: </b><span data-bind="text: entrecalles"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Numero: </b><span data-bind="text: numero"></span></span>
+                    </div>
+                </div>
+                <div class="oj-flex">
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Asignado a: </b><span data-bind="text: pva"></span></span>
+                    </div>
+                    <div class="oj-lg-4">
+                        <span class="data"><b>Hora deseada: </b><span data-bind="text: desado"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>

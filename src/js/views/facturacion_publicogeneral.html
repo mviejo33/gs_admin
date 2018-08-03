@@ -1,0 +1,45 @@
+<div data-bind="ojModule: { name: 'dialog_timbre', params: $data }"></div>
+<div class="oj-flex oj-padding-top  oj-flex-items-pad">
+    <div class="oj-flex-item">
+        <label for="importe-textinput">Importe</label>
+        <input id="importe-textinput" type="text" data-bind="ojComponent: {
+            component: 'ojInputText', 
+            value: importe,
+            validators: [{
+                type: 'regExp', 
+                options: {
+                  pattern: '[0-9]*\.?[0-9]+', 
+                  messageDetail: 
+                    ''
+                }
+            }]}" />
+        <oj-label for="froms">Fecha</oj-label>
+        <oj-input-date id="froms" value={{dateValue}} date-picker=[[datePicker]] min="[[dateRangeFromValue]]" max="[[dateRangeToValue]]">
+        </oj-input-date>
+    </div>
+    <div class="oj-flex-item">
+        <label for="pvas-select">Punto de venta</label>
+        <select autocomplete="off" id="pvas-select" data-bind="ojComponent: {
+                component: 'ojSelect',  
+                value: pva,
+                placeholder: 'Selecciona un punto de venta...'}">
+            <!-- ko foreach: pvas -->
+            <option data-bind="value:value, text:label"></option>
+            <!-- /ko -->
+        </select>
+        <label for="importe-textinput">Litros</label>
+        <input id="importe-textinput" type="text" data-bind="ojComponent: {
+            component: 'ojInputText', 
+            value: litros,
+            validators: [{
+                type: 'regExp', 
+                options: {
+                  pattern: '[0-9]*\.?[0-9]+', 
+                  messageDetail: 
+                    ''
+                }
+            }]}" />
+        <input id="contado-button" style="margin-top: 0px;" class="oj-margin-top" type="button" data-bind="click: facturaPublicoGeneral, ojComponent: {component: 'ojButton', disabled: shouldDisableSubmit(), label: 'Timbra',
+                                rootAttributes: {style:'max-width:100%'}}" />
+    </div>
+</div>

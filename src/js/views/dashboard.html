@@ -1,0 +1,52 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-hybrid-padding">
+    <div class="oj-flex">
+        <div class="oj-md-6">
+            <table id="table" summary="Ciudades List" aria-label="Ciudades Table" data-bind="ojComponent: {component: 'ojTable', 
+                                    data: datasource,
+                                    rootAttributes: {style: 'height: 85vh;'},
+                                    columnsDefault: {sortable: 'enabled'}, 
+                                    columns: [{headerText: 'Id', 
+                                               field: 'cnombre'},
+                                              {headerText: 'Nombre', 
+                                               field: 'enombre'}]}">
+            </table>
+        </div>
+        <div class="oj-md-6">
+            <div class="oj-flex oj-flex-items-pad">
+                <div class="oj-flex-item deprecated-col-default-width">
+                    <label for="spinnercontrol">Ciudad Nombre</label>
+                </div>
+                <div class="oj-flex-item deprecated-col-default-width">
+                    <input id="ciudadNombreInput" data-bind="ojComponent: {
+                       component: 'ojInputText', 
+                       value: inputCiudadNombre}" />
+                </div>
+            </div>
+            <div class="oj-flex oj-flex-items-pad">
+                <div class="oj-flex-item deprecated-col-default-width">
+                    <label for="inputcontrol">Estado Nombre</label>
+                </div>
+                <div class="oj-flex-item deprecated-col-default-width">
+                    <input id="estadoNombreInput" data-bind="ojComponent: {
+                       component: 'ojInputText', 
+                       value: inputEstadoNombre}" />
+                </div>
+            </div>
+            <div class="oj-flex oj-flex-items-pad">
+                <button id="addbutton" data-bind="click: addRow, 
+                    ojComponent: { component: 'ojButton', label: 'Add to end' }">
+                </button>
+                <button id="updateButton" data-bind="click: updateRow, 
+                    ojComponent: { component: 'ojButton', label: 'Update' }">
+                </button>
+                <button id="removeButton" data-bind="click: removeRow, 
+                    ojComponent: { component: 'ojButton', label: 'Remove' }">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

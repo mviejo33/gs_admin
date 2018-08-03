@@ -1,0 +1,39 @@
+<div id="dialog-doc-tag-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogWrapper">
+            <oj-dialog style="display:none;width: 550px; min-width: 100px; max-width: 800px;" on-oj-before-open='[[beforeOpen]]' id="dialog-doc-tag">
+                <div slot="header" class="oj-helper-clearfix"> <span id="dialogTitleId" data-bind="text: 'Asigna tag'" class="oj-dialog-title"> </span> </div>
+                <div slot="body">
+                <center>
+                    <div class="oj-flex oj-flex-items-pad">
+                        <div class="oj-md-6">
+                            <div style="width: 1px; min-width: 100%;">
+                                <h3>Tags disponibles</h3>
+                                <oj-table id="table-tags" aria-label="Tabla tags" data='[[tagsDataProvider]]' columns='{{tagsColumnArray}}' display='grid' style='height: 200px;' selection-mode='{"row": "single", "column": "multiple"}'>
+                                </oj-table>
+                            </div>
+                        </div>
+                        <div class="oj-md-6">
+                            <div style="width: 1px; min-width: 100%;">
+                                <h3>Tags a incluir</h3>
+                                <oj-table id="table-tags-2" aria-label="Tabla tags" data='[[tags2DataProvider]]' columns='{{tagsColumnArray}}' display='grid' style='height: 200px;' selection-mode='{"row": "single", "column": "multiple"}'>
+                                </oj-table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div slot="footer">
+                        <oj-button id="okButton-tag" style="width: 100%;max-width: 100%; margin-top: 15px" disabled=[[shouldDisableSubmit()]] data-bind="click: submit "> OK </oj-button>
+                    </div>
+
+                    <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        Tag registrado con éxito!
+                    </div>
+                    <div style="display:none;" id="failure-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        No se pudo insertar el tag
+                    </div>
+                    </center>
+            </oj-dialog>
+            </div>
+        </div>
+    </div>

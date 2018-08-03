@@ -1,0 +1,49 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-flex ">
+    <div class="oj-flex-item oj-md-4"></div>
+    <div class="oj-flex-item oj-md-center oj-md-4 oj-flex oj-md-flex-direction-column oj-md-flex-wrap-nowrap">
+        <div class="demo-circle-flex-item oj-flex-item  oj-flex ">
+            <div class="logo-container">
+            </div>
+        </div>
+        <div class="oj-flex-item">
+            <div id="panel-container" class="oj-panel oj-panel-shadow-md oj-sm-margin-2x demo-panel-customizations">
+                <center>
+                    <div class="oj-hybrid-padding-start">
+                        <img src="css/images/logoicono.png" alt="bulleted list image" />
+                    </div>
+                    <div class="demo-signin-form-container oj-hybrid-padding">
+                        <form class="demo-signin-form oj-hybrid-padding-vertical" method="post" name="signInForm">
+                            <input id="username" placeholder="User Name" autocapitalize=off aria-label="User Name" data-bind="ojComponent: {component: 'ojInputText', rootAttributes: {style:'width:100%; max-width:100%'}, placeholder: 'Usuario', value: userName, required: true, validators: [{
+                                                          type: 'regExp', 
+                                                          options: {
+                                                            pattern: '[0-9]{1,}'}}]}">
+                            <input type="password" id="pwd" placeholder="Password" aria-label="password" data-bind="ojComponent: {component: 'ojInputPassword',rootAttributes: {style:'width:100%; max-width:100%'}, placeholder: 'Contraseña', value: passWord, optionChange: pwdOptionChange, required: true, validators: [{
+                                                          type: 'regExp', 
+                                                          options: {
+                                                            pattern: '[a-zA-Z0-9]{6,}'}}]}" />
+                            <div class="oj-hybrid-padding-top">
+                                <button id="signInBtn" class="demo-signin-button " data-bind="click: signIn, ojComponent: {component:'ojButton',rootAttributes: {style:'width:100%; max-width:100%'}, label: 'Ingresar', chroming: 'full'}"></button>
+                            </div>
+                            <!-- <div id="rememberUserNameCheckBox" aria-label="Remember User Name" data-bind="ojComponent: { component: 'ojCheckboxset', value: rememberUserName }" class='oj-checkboxset-no-chrome oj-checkboxset-input-start'> -->
+                            <!-- <span class="oj-choice-item"> -->
+                            <!--                 <input id="rememberUserName" type="checkbox" value="remember">
+                <label for="rememberUserName">Recordar usuario</label> -->
+                            <span class="oj-choice-item">
+                            <a id="cannotSignInBtn" data-bind="click: forgotPwd"  class="forgotLinkM">Olvidé mi contraseña</a>
+                            </span>
+                    </div>
+                    </form>
+            </div>
+            </center>
+        </div>
+    </div>
+</div>
+</div>

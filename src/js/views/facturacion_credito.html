@@ -1,0 +1,113 @@
+<div data-bind="ojModule: { name: 'dialog_timbre', params: $data }"></div>
+<div id="clients-table-wrapper">
+    <h3>Clientes</h3>
+    <div>
+        <input id="search" maxlength="30" placeholder="Buscar clientes..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+        <oj-button id="clearButton" style="display: inline-block;" on-click='[[getClientesPaging]]' display='icons' chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+        </oj-button>
+        <input id="credito-button" style="margin-top: 0px;" class="oj-margin-top" type="button" data-bind="click: facturaCredito, ojComponent: {component: 'ojButton', disabled: shouldDisableSubmit(), label: 'Timbra',
+                                rootAttributes: {style:'max-width:100%'}}" />
+    </div>
+    <oj-table id="clients-paging-table" aria-label="Tabla de clientes" data='[[dataprovider]]' columns='{{clientesColumnArray}}' display='grid' contextmenu="clientes-contextmenu" selection="[[currentSelectedClient]]" selection-mode='{"row": "single"}' style='height: 450px; width: 1px; min-width: 100%;'>
+        <oj-menu id="clientes-contextmenu" slot="contextMenu" on-oj-action="[[contextmenu_clientes_action]]" on-oj-before-open="[[contextmenu_clientes_beforeOpen]]" style="display:none" aria-label="Detalle cliente">
+            <oj-option value="Detalle cliente">Ver datos de facturación</oj-option>
+        </oj-menu>
+        <oj-paging-control id="paging" data='[[dataprovider]]' slot='bottom'>
+    </oj-table>
+    <div id="dialogWrapper">
+        <div style="display:none" id="detalle-cliente-dialog" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', title:'Edición de datos fiscales de ' + telefono(), rootAttributes: { style: 'width: 60vw; min-width 240px; max-width: 400px; min-height: 100px; max-height: 80vh;'}}">
+            <div class="oj-dialog-body">
+                <div class="oj-flex">
+                    <div class="oj-md-6 oj-flex-item">
+                        <label for="credito-formadepago-select">Forma de pago</label>
+                        <select autocomplete="off" required id="credito-formadepago-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: formaPago,
+                            placeholder: 'Selecciona una forma de pago',
+                            rootAttributes: {style:'max-width:100%'},
+                            validators: [{
+                                type: 'regExp', 
+                                options: {
+                                  pattern: '[0-9]{10,10}', 
+                                  messageDetail: 
+                                    ''
+                                }
+                            }]}">
+                            <!-- ko foreach: formasPago -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <br>
+                        <label for="credito-ctabanco-inputtext">Cuenta bancaria</label>
+                        <input autocomplete="off" id="credito-ctabanco-inputtext" type="text" data-bind="ojComponent: {
+                        component: 'ojInputText', 
+                        value: ctaBanco,
+                        validators: [{
+                            type: 'regExp', 
+                            options: {
+                              pattern: '[0-9][0-9][0-9][0-9]', 
+                              messageDetail: 
+                                'Debes ingresar los últimos 4 dígitos de la cuenta bancaria'
+                            }
+                        }]}" />
+                    </div>
+                    <div class="oj-md-6 oj-flex-item">
+                        <label for="credito-usocfdi-select">Uso CFDI</label>
+                        <select autocomplete="off" required id="credito-usocfdi-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: usoCFDI,
+                            placeholder: 'Selecciona un uso de CFDI',
+                            rootAttributes: {style:'max-width:100%'}}">
+                            <!-- ko foreach: usosCFDI -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <div data-bind="visible: rfc() == null">
+                            <label for="rfc-textinput">RFC</label>
+                            <input pattern="([a-zñ\x26A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([a-zA-Z\d]{3})" autocomplete="off" required id="rfc-textinput" type="text" data-bind="ojComponent: {
+                            component: 'ojInputText', 
+                            value: rfc}" />
+                        </div>
+                        <label for="mail-textinput">Correo electrónico</label>
+                        <input autocomplete="off" required id="mail-textinput" type="text" data-bind="ojComponent: {
+                            component: 'ojInputText', 
+                            required: true,
+                            value: mails,
+                            validators: [{
+                                type: 'regExp', 
+                                options: {
+                                  pattern: '([\\w|ñ.+-]+@[\\w.+-]+\.[a-zA-Z0-9]+;)+', 
+                                  messageDetail: 
+                                    'El correo debe terminar en punto y coma, se pueden ingresar varios correos separados por punto y coma'
+                                }
+                            }],
+                            rootAttributes: {style:'width:100%; max-width:100%'}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="oj-dialog-footer">
+                <button id="button-asignarDatosFacturacion" data-bind="click: asignarDatosFacturacion, ojComponent: {component: 'ojButton', label: 'Asignar'}"> </button>
+            </div>
+        </div>
+    </div>
+    <div class="oj-flex oj-flex-items-pad">
+        <div class="oj-md-6">
+            <div style="width: 1px; min-width: 100%;">
+                <h3>Remisiones y/o descargas de cliente</h3>
+                <oj-table id="porFacturar-table" aria-label="PorFacturar Tabla" data='[[porFacturarDataProvider]]' columns='{{porFacturarColumnArray}}' display='grid' style='height: 200px;' selection-mode='{"row": "single", "column": "multiple"}'>
+                </oj-table>
+            </div>
+        </div>
+        <div class="oj-md-6">
+            <div style="width: 1px; min-width: 100%;">
+                <h3 data-bind="text:'Remisiones y/o descargas a timbrar (total: $' + total() + ')'"></h3>
+                <oj-table id="aFacturar-table" aria-label="AFacturar Tabla" data='[[aFacturarDataProvider]]' columns='{{porFacturarColumnArray}}' display='grid' style='height: 200px;' selection-mode='{"row": "single", "column": "multiple"}'>
+                </oj-table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div data-bind="ojModule: { name: 'dialog_timbre', params: promiseCredito}"></div> -->
+<!-- <div data-bind="ojModule: { name: 'dialog_datosFiscales', params: datosFiscalesParams}"></div> -->

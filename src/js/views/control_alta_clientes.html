@@ -1,0 +1,194 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-flex">
+    <div class="oj-md-1 oj-flex-item"></div>
+    <div class="oj-md-10 oj-flex-item">
+        <div id="panel-container" class="oj-panel oj-panel-shadow-md oj-sm-margin-2x demo-panel-customizations">
+            <div class="oj-flex">
+                <div class="oj-md-6 oj-flex-item">
+                    <label for="nombre-textinput">Nombre</label>
+                    <input autocomplete="off" required id="nombre-textinput" type="text" data-bind="ojComponent: { component: 'ojInputText', value: nombre, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                    <label for="telefono-textinput">Teléfono</label>
+                    <input autocomplete="off" required id="telefono-textinput" type="text" data-bind="ojComponent: {
+                        component: 'ojInputText', 
+                        value: telefono,
+                        validators: [{
+                            type: 'regExp', 
+                            options: {
+                              pattern: '[0-9]*\.?[0-9]+', 
+                              messageDetail: 
+                                ''
+                            }
+                        }],
+                        rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                    <oj-label for="estados-select">Estado</oj-label>
+                    <select autocomplete="off" required id="estados-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: estado,
+                            optionChange:estadoOptionChange,
+                            placeholder: 'Selecciona un estado',
+                            rootAttributes: {style:'max-width:100%'}}">
+                        <!-- ko foreach: estados -->
+                        <option data-bind="value:value, text:label"></option>
+                        <!-- /ko -->
+                    </select>
+                    <oj-label for="ciudades-select">Ciudad</oj-label>
+                    <select autocomplete="off" required id="ciudades-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: ciudad,
+                            optionChange: ciudadOptionChange,
+                            placeholder: placeHolderCiudadSelect,
+                            rootAttributes: {style:'max-width:100%'}}">
+                        <!-- ko foreach: ciudades -->
+                        <option data-bind="value:value, text:label"></option>
+                        <!-- /ko -->
+                    </select>
+                    <oj-label for="colonias-select">Colonia</oj-label>
+                    <select autocomplete="off" required id="colonias-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            optionChange: coloniaOptionChange,
+                            value: colonia,
+                            placeholder: placeHolderColoniaSelect,
+                            rootAttributes: {style:'max-width:100%'}}">
+                        <!-- ko foreach: colonias -->
+                        <option data-bind="value:value, text:label"></option>
+                        <!-- /ko -->
+                    </select>
+                    <label for="calle-textinput">Calle</label>
+                    <input autocomplete="off" required id="calle-textinput" type="text" data-bind="ojComponent: { component: 'ojInputText', value: calle, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                    <oj-label for="rumbo-select">Rumbo</oj-label>
+                    <oj-select-one id="rumbos-select" style="width:100%;max-width: 100%;" placeholder="Selecciona un rumbo" options="{{rumbosDP}}" value="{{rumbo}}">
+                    </oj-select-one>
+                    <label for="numero-textinput">Numero</label>
+                    <input autocomplete="off" required id="numero-textinput" type="text" data-bind="ojComponent: {
+            component: 'ojInputText', 
+            value: numero,
+            rootAttributes: {style: 'width:100%; max-width:100%'},
+            validators: [{
+                type: 'regExp', 
+                options: {
+                  pattern: '[0-9]*\.?[0-9]+', 
+                  messageDetail: 
+                    ''
+                }
+            }]}" />
+                    <label for="numerointerior-textinput">Numero interior</label>
+                    <input autocomplete="off" id="numerointerior-textinput" type="text" data-bind="ojComponent: {
+            component: 'ojInputText', 
+            value: numerointerior,
+            rootAttributes: {style: 'width:100%; max-width:100%'},
+            validators: [{
+                type: 'regExp', 
+                options: {
+                  pattern: '[0-9]*\.?[0-9]+', 
+                  messageDetail: 
+                    ''
+                }
+            }]}" />
+                    <label for="plantas-select">Planta</label>
+                    <select required autocomplete="off" id="plantas-select" data-bind="ojComponent: {
+                component: 'ojSelect',  
+                value: planta,
+                placeholder: 'Selecciona una planta',
+                rootAttributes: {style:'max-width:100%'}}">
+                        <!-- ko foreach: plantas -->
+                        <option data-bind="value:value, text:label"></option>
+                        <!-- /ko -->
+                    </select>
+                </div>
+                <div class="oj-md-6 oj-flex-item oj-padding-start">
+                    <label for="entrecalle1-textinput">Entre calle 1</label>
+                    <input autocomplete="off" id="entrecalle1-textinput" type="text" data-bind="ojComponent: { component: 'ojInputText', value: entrecalle1, invalidComponentTracker: tracker, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                    <label for="entrecalle2-textinput">Entre calle 2</label>
+                    <input autocomplete="off" id="entrecalle2-textinput" type="text" data-bind="ojComponent: { component: 'ojInputText', value: entrecalle2, invalidComponentTracker: tracker, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                    <div class='oj-flex-bar oj-margin-top oj-padding-top'>
+                        <div class='oj-flex-bar-start'>
+                            <oj-label id="mainlabelid" class="oj-label-inline">Incluir datos fiscales</oj-label>
+                        </div>
+                        <div class='oj-flex-bar-middle'>
+                            <oj-switch style="margin-bottom: 3px;" id="noChrome" value="{{includeDatosFiscales}}"></oj-switch>
+                        </div>
+                    </div>
+                    <div data-bind="visible: includeDatosFiscales">
+                        <label for="rfc-textinput">RFC</label>
+                        <input pattern="([a-zñ\x26A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([a-zA-Z\d]{3})" autocomplete="off" id="rfc-textinput" type="text" data-bind="ojComponent: {
+                            rootAttributes: {style:'max-width:100%'},
+                            component: 'ojInputText', 
+                            value: rfc}" />
+                        <label for="formapago-select">Forma de pago</label>
+                        <select autocomplete="off" id="formapago-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: formapago,
+                            placeholder: 'Selecciona una forma de pago',
+                            rootAttributes: {style:'max-width:100%'},
+                            validators: [{
+                                type: 'regExp', 
+                                options: {
+                                  pattern: '[0-9]{10,10}', 
+                                  messageDetail: 
+                                    ''
+                                }
+                            }]}">
+                            <!-- ko foreach: formaspago -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <br>
+                        <label for="mail-textinput">Correo electrónico</label>
+                        <input autocomplete="off" required id="mail-textinput" type="text" data-bind="ojComponent: {
+                        component: 'ojInputText', 
+                        value: mails,
+                        validators: [{
+                            type: 'regExp', 
+                            options: {
+                              pattern: '([\\w|ñ.+-]+@[\\w.+-]+\.[a-zA-Z0-9]+;)+', 
+                              messageDetail: 
+                                'El correo debe terminar en punto y coma, se pueden ingresar varios correos separados por punto y coma'
+                            }
+                                        }],
+                        rootAttributes: {style:'width:100%; max-width:100%'}}" />
+                        <label for="ctabanco-inputtext">Cuenta bancaria</label>
+                        <input autocomplete="off" id="ctabanco-inputtext" type="text" data-bind="ojComponent: {
+                        component: 'ojInputText', 
+                        rootAttributes: {style:'max-width:100%'},
+                        value: ctabanco}" />
+                        <label for="usocfdi-select">Uso CFDI</label>
+                        <select autocomplete="off" required id="usocfdi-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: usoCFDI,
+                            placeholder: 'Selecciona un uso de CFDI',
+                            rootAttributes: {style:'max-width:100%'}}">
+                            <!-- ko foreach: usosCFDI -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <label for="metodospago-select">Método de pago</label>
+                        <select autocomplete="off" required id="metodospago-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: metodopago,
+                            placeholder: 'Selecciona un método de pago',
+                            rootAttributes: {style:'max-width:100%'}}">
+                            <!-- ko foreach: metodospago -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                    </div>
+                    <input id="submit-button" class="oj-margin-top" type="button" data-bind="click: submit, ojComponent: {component: 'ojButton', label: 'Dar de alta cliente', disabled: shouldDisableSubmit(), rootAttributes: {style: 'width:100%; max-width:100%; margin-top:20px;'}}" />
+                </div>
+                <div class="oj-md-6 oj-flex-item">
+                    <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        Cliente creado con éxito!
+                    </div>
+                    <div style="display:none;" id="duplicate-telefono-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        No se pudo crear cliente, ya hay una cliente registrado con ese telefono
+                    </div>
+                    <div style="display:none;" id="fail-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        No se pudo crear cliente
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+<div id="dialog-valvula-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogWrapper">
+            <oj-dialog style="display:none" on-oj-before-open='[[beforeOpen]]' id="dialog-doc">
+                <div slot="header" class="oj-helper-clearfix"> <span id="dialogTitleId" data-bind="text: 'Alta de documento'" class="oj-dialog-title"> </span> </div>
+                <div slot="body">
+                    <div class="oj-flex oj-padding-top  oj-flex-items-pad">
+                        <label for="nombre-textinput">Nombre</label>
+                        <input id="nombre-textinput" maxlength="30" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                rootAttributes: {style: 'max-width:100%;width:100%'},
+                                value: nombre,
+                                }" />
+                        <label for="autor-textinput">Autor</label>
+                        <input id="autor-textinput" maxlength="30" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                rootAttributes: {style: 'max-width:100%;width:100%'},
+                                value: autor,
+                                }" />
+                        <oj-label for="from">Fecha de emisión</oj-label>
+                        <oj-input-date id="from" value={{fechaEmision}} style="width: 100%;max-width: 100%;" date-picker=[[datePicker]] max="[[dateRangeToValue]]">
+                        </oj-input-date>
+                        <oj-label for="from">Fecha de vigencia</oj-label>
+                        <oj-input-date id="from" value={{fechaVigencia}} style="width: 100%;max-width: 100%;" date-picker=[[datePicker]] max="[[dateRangeToValue]]">
+                        </oj-input-date>
+                        <oj-label style="width: 100%" id="loc-radio-label">Corresponde a</oj-label>
+                        <oj-radioset labelled-by="loc-radio-label" value="{{currentLocation}}">
+                            <oj-option id="pventa" value="pventa">Pva</oj-option>
+                            <oj-option id="cliente" value="cliente">Cliente</oj-option>
+                            <oj-option id="estacion" value="estacion">Estación</oj-option>
+                            <oj-option id="planta" value="planta">Planta</oj-option>
+                            <oj-option id="na" value="na">N/A</oj-option>
+                        </oj-radioset>
+                        <div data-bind="visible:currentLocation() == 'planta'" style="width: 100%">
+                            <label for="plantas-select">Planta</label>
+                            <select autocomplete="off" ultimasLecturas id="plantas-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: planta,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una planta...'}">
+                                <!-- ko foreach: plantas -->
+                                <option data-bind="value:value, text:label"></option>
+                                <!-- /ko -->
+                            </select>
+                        </div>
+                        <div data-bind="visible:currentLocation() == 'estacion'" style="width: 100%">
+                            <label for="estaciones-select">Estación</label>
+                            <select autocomplete="off" ultimasLecturas id="estaciones-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: estacion,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una estación...'}">
+                                <!-- ko foreach: estaciones -->
+                                <option data-bind="value:value, text:label"></option>
+                                <!-- /ko -->
+                            </select>
+                        </div>
+                        <div data-bind="visible:currentLocation() == 'pventa'" style="width: 100%">
+                            <label for="pventas-select">Pventa</label>
+                            <select autocomplete="off" ultimasLecturas id="pventas-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: pventa,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona un pva...'}">
+                                <!-- ko foreach: pventas -->
+                                <option data-bind="value:value, text:label"></option>
+                                <!-- /ko -->
+                            </select>
+                        </div>
+                        <div data-bind="visible:currentLocation() == 'cliente'" style="width: 100%">
+                            <label for="cliente-textinput">Cliente</label>
+                            <input id="cliente-textinput" maxlength="30" placeholder="Buscar cliente..." , data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                rootAttributes: {style: 'max-width:85%;width:85%'},
+                                value: cliente,
+                                disabled: validClient() == true,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                            <oj-button id="searchButton" data-bind="visible: validClient() == false" style="display: inline-block;" on-click='[[lookForCliente]]' display='icons' chroming='half'>
+                                <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+                            </oj-button>
+                            <oj-button id="clearButton" data-bind="visible: validClient() == true" style="display: inline-block;" on-click='[[resetClienteSearch]]' display='icons' chroming='half'>
+                                <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-cross'></span> Borrar
+                            </oj-button>
+                        </div>
+                        <div style="width: 100%">
+                            <label for="empresas-select">Empresa</label>
+                            <select autocomplete="off" id="empresas-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: empresa,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una empresa...'}">
+                                <!-- ko foreach: empresas -->
+                                <option data-bind="value:value, text:label"></option>
+                                <!-- /ko -->
+                            </select>
+                        </div>
+                    </div>
+                    <label for="ss">Documento </label>
+                    <oj-file-picker id="ss" accept='["application/pdf"]' class="oj-filepicker-edocuenta" selectOn="click" on-oj-select="{{filePickerListener}}"></oj-file-picker>
+                    <span id="documentoSpan" data-bind="text: nombreDocumento() ? nombreDocumento() : 'No se ha cargado ningún archivo'"></span>
+                    <br>
+                    
+                    <div slot="footer">
+                        <oj-button id="okButton-documento" style="width: 100%;max-width: 100%;" disabled=[[shouldDisableSubmit()]] data-bind="click: submit "> OK </oj-button>
+                    </div>
+                    <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        documento registrado con éxito!
+                    </div>
+                    <div style="display:none;" id="failure-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        No se pudo insertar el documento
+                    </div>
+            </oj-dialog>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,118 @@
+<div data-bind="ojModule: { name: 'dialog_loading', params: $data }"></div>
+<div id="clients-table-wrapper">
+    <h3>Clientes</h3>
+    <div>
+        <input id="search" maxlength="30" placeholder="Buscar clientes..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+        <oj-button id="clearButton" style="display: inline-block;" on-click='[[getClientesPaging]]' display='icons' chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+        </oj-button>
+        <div style="float:right;">
+            <oj-button id="aa" display='icons' on-click='[[downloadClientsSheet]]' chroming='half'>
+                <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-grid'></span> Descargar a excel
+            </oj-button>
+            <oj-label for="switch" class="oj-label oj-label-inline">Filtrar por pendientes</oj-label>
+            <oj-switch style="margin-bottom: 3px;" on-click='[[initializeClientesTable.bind($data, true)]]' value="{{filterPendientes}}" id="switch"></oj-switch>
+        </div>
+    </div>
+    <oj-table id="clients-paging-table" aria-label="Tabla de clientes" data='[[clientesDataProvider]]' columns='{{clientesColumnArray}}' display='grid' contextmenu="clientes-contextmenu" selection-mode='{"row": "single"}' style='height: 230px; width: 1px; min-width: 100%;'>
+    <oj-menu id="clientes-contextmenu" slot="contextMenu" on-oj-action="[[contextmenu_clientes_action]]" on-oj-before-open="[[contextmenu_clientes_beforeOpen]]" style="display:none">
+            <oj-option value="Descargar créditos cliente">Descargar conciliación</oj-option>
+        </oj-menu>
+        <oj-paging-control id="paging" page-size='10' data='[[clientesDataProvider]]' slot='bottom'>
+    </oj-table>
+    <h3>Pagos pendientes</h3>
+    <oj-table id="pagosPendientes-table" aria-label="PagosPendientes Tabla" data='[[pagosPendientesDataProvider]]' columns='{{pagosPendientesColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+    </oj-table>
+    <div class="oj-flex oj-flex-items-pad">
+        <!-- <div class="oj-md-4">
+            <div style="width: 1px; min-width: 100%;">
+                <h3>Pagos pendientes</h3>
+                <oj-table id="pagosPendientes-table" aria-label="PagosPendientes Tabla" data='[[pagosPendientesDataProvider]]' columns='{{pagosPendientesColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                </oj-table>
+            </div>
+        </div> -->
+        <div class="oj-md-6">
+            <div style="width: 1px; min-width: 100%;">
+                <h3>Facturas pendientes</h3>
+                <oj-table id="facturasPendientes-table" row-renderer='[[rowRendererFP]]' display='grid' aria-label="FacturasPendientes Tabla" data='[[facturasPendientesDataProvider]]' edit-mode='[[isEditableFP()]]' style='height: 200px; width: 1px; min-width: 100%;' columns='{{facturasPendientesColumnArray}}'>
+                </oj-table>
+            </div>
+        </div>
+        <div class="oj-md-6">
+            <div style="width: 1px; min-width: 100%;">
+                <h3>Remisiones pendientes</h3>
+                <oj-table id="remisionesPendientes-table" row-renderer='[[rowRendererRP]]' aria-label="RemisionesPendientes Tabla" data='[[remisionesPendientesDataProvider]]' edit-mode='[[isEditableFP()]]' display='grid' columns='{{remisionesPendientesColumnArray}}' display='grid' class="oj-margin-top" style='height: 200px; width: 1px; min-width: 100%;'>
+                </oj-table>
+            </div>
+        </div>
+        <div class="oj-md-6">
+            <div style="width: 1px; min-width: 100%;">
+                <h3>Facturas conciliadas</h3>
+                <oj-table id="facturasConciliadas-table" aria-label="FacturasConciliadas Tabla" data='[[facturasConciliadasDataProvider]]' columns='{{facturasConciliadasColumnArray}}' display='grid' style='height: 200px; width: 1px; min-width: 100%;' selection-mode='{"row": "single", "column": "multiple"}'>
+                </oj-table>
+            </div>
+        </div>
+        <div class="oj-md-6">
+            <div style="width: 1px; min-width: 100%;">
+                <h3>Remisiones conciliadas</h3>
+                <oj-table id="remisionesConciliadas-table" aria-label="RemisionesConciliadas Tabla" data='[[remisionesConciliadasDataProvider]]' display='grid' columns='{{remisionesConciliadasColumnArray}}' display='grid' class="oj-margin-top" selection-mode='{"row": "single", "column": "multiple"}' style='height: 200px; width: 1px; min-width: 100%;'>
+                </oj-table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="rowTemplateFP">
+    <tr>
+        <td data-bind="text: factura">
+        </td>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: total">
+        </td>
+        <td data-bind="text: x_asignar">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="editRowTemplateFP">
+    <tr>
+        <td data-bind="text: factura">
+        </td>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: total">
+        </td>
+        <td>
+            <oj-input-text id="it2" value='{{x_asignar}}' data-oj-context>
+            </oj-input-text>
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="rowTemplateRP">
+    <tr>
+        <td data-bind="text: remision">
+        </td>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: precio">
+        </td>
+        <td data-bind="text: x_asignar">
+        </td>
+    </tr>
+</script>
+<script type="text/html" id="editRowTemplateRP">
+    <tr>
+        <td data-bind="text: remision">
+        </td>
+        <td data-bind="text: dia">
+        </td>
+        <td data-bind="text: precio">
+        </td>
+        <td>
+            <oj-input-text id="it3" value='{{x_asignar}}' data-oj-context>
+            </oj-input-text>
+        </td>
+    </tr>
+</script>
+<!-- <div data-bind="ojModule: { name: 'dialog_timbre', params: promiseCredito}"></div> -->
+<!-- <div data-bind="ojModule: { name: 'dialog_datosFiscales', params: datosFiscalesParams}"></div> -->

@@ -1,0 +1,127 @@
+<div id="dialog-totales-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogWrapper">
+            <oj-dialog style="display:none" on-oj-close='[[afterClose]]' on-oj-before-open='[[beforeOpen]]' id="dialog-totales">
+                <div slot="header" class="oj-helper-clearfix"> <span id="dialogTitleId" data-bind="text: 'Totales'" class="oj-dialog-title"> </span> </div>
+                <div slot="body">
+                    <div class="oj-flex oj-padding-top  oj-flex-items-pad">
+                        <label for="pvas-select">Cuentas</label>
+                        <select autocomplete="off" ultimasLecturas id="cuentas-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: cuenta,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una cuenta...'}">
+                            <!-- ko foreach: cuentas -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <oj-label for="from">Día último</oj-label>
+                        <oj-input-date id="from" value={{diaultimo}} style="width: 100%;max-width: 100%;" date-picker=[[datePicker]] max="[[dateRangeToValue]]">
+                        </oj-input-date>
+                        <label for="totalabonos-textinput">Total abonos</label>
+                        <input id="totalabonos-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                ultimasLecturas: true,
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: totalAbonos,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]*\.?[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                        <label for="totalcargos-textinput">Total cargos</label>
+                        <input id="totalcargos-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                ultimasLecturas: true,
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: totalCargos,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]*\.?[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                        <label for="totalcomisiones-textinput">Total comisiones</label>
+                        <input id="totalcomisiones-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: totalComisiones,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]*\.?[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                        <label for="totalintereses-textinput">Total intereses</label>
+                        <input id="totalintereses-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: totalIntereses,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]*\.?[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                        <label for="totalcargos-textinput">Num abonos</label>
+                        <input id="totalcargos-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                ultimasLecturas: true,
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: numAbonos,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                        <!-- totalcomisiones, totalintereses -->
+                        <label for="totalcargos-textinput">Num cargos</label>
+                        <input id="totalcargos-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                ultimasLecturas: true,
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: numCargos,
+                                validators: [{
+                                    type: 'regExp', 
+                                    options: {
+                                      pattern: '[0-9]+', 
+                                      messageDetail: 
+                                        ''
+                                    }
+                                }]}" />
+                        <label for="fileEdoCuenta">PDF Estado de Cuenta </label>
+                        <oj-file-picker id="fileuploadEdoCuenta" accept='["application/pdf"]' class="oj-filepicker-edocuenta" selectOn="click" on-oj-select="{{filePickerListenerEdoCuenta}}"></oj-file-picker>
+                        <span id="fileEdoCuenta" data-bind="text: fileNameEdoCuenta() ? fileNameEdoCuenta() : 'No se ha cargado ningún archivo'"></span>
+                        <br>
+                        <div data-bind="visible: cuenta() ? cuenta()[0] == 19 || cuenta()[0] == 23 || cuenta()[0] == 27 ? true : false : false ">
+                            <label for="fileTransferencias">PDF Egresos</label>
+                            <oj-file-picker id="fileuploadTransferencia" accept='["application/pdf"]' class="oj-filepicker-transferencias" selectOn="click" on-oj-select="{{filePickerListenerTransferencias}}"></oj-file-picker>
+                            <span id="fileTransferencias" data-bind="text: fileNameTransferencias() ? fileNameTransferencias() : 'No se ha cargado ningún archivo'"></span>
+                        </div>
+                    </div>
+                </div>
+                <div slot="footer">
+                    <oj-button id="okButton-totales" style="width: 100%;max-width: 100%;" disabled=[[shouldDisableSubmit()]] data-bind="click: submit "> Ingresar totales </oj-button>
+                </div>
+                <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    Totales de mes insertados con éxito!
+                </div>
+                <div style="display:none;" id="failure-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    No se pudieron insertar los totales de mes
+                </div>
+            </oj-dialog>
+        </div>
+    </div>
+</div>

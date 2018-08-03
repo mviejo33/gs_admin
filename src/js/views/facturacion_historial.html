@@ -1,0 +1,21 @@
+<div id="facturas-table-wrapper">
+    <h3>Historial de facturas</h3>
+    <input id="search" maxlength="30" placeholder="Buscar clientes..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+    <oj-button id="clearButton" on-click='[[getFacturasPaging]]' display='icons' chroming='half'>
+        <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+    </oj-button>
+    <oj-table id="facturas-paging-table" aria-label="Tabla de facturas" data='[[dataprovider]]' columns='{{facturasColumnArray}}' display='grid' selection="[[currentSelectedFactura]]" on-oj-before-open="[[contextmenu_facturas_beforeOpen]]" contextmenu="facturas-contextmenu" selection-mode='{"row": "single"}' style='height: 450px; width: 1px; min-width: 100%;'>
+        <oj-menu id="facturas-contextmenu" slot="contextMenu" on-oj-action="[[contextmenu_facturas_action]]"  style="display:none" aria-label="Detalle factura">
+            <oj-option value="Descargar PDF">Descargar PDF</oj-option>
+            <oj-option value="Descargar XML">Descargar XML</oj-option>
+            <oj-option data-bind="visible: desglose_vales()" value="Desglose">Ver desglose de vale</oj-option>
+            <oj-option value="Cancelar">Cancelar</oj-option>
+        </oj-menu>
+        <oj-paging-control id="paging" data='[[dataprovider]]' page-size='10'  slot='bottom'>
+    </oj-table>
+</div>
+<div data-bind="ojModule: { name: 'dialog_timbre', params: $data }"></div>
+
+
+<!-- <div data-bind="ojModule: { name: 'dialog_timbre', params: {'promise': promiseCancelacion, 'dialog': {'title': 'Procesando cancelación', body: 'Se está procesando la cancelación...'}}}"></div> -->

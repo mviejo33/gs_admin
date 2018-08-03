@@ -1,0 +1,17 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-hybrid-padding">
+    <!-- ko if: $parent.unauthorized() == false -->
+    <oj-buttonset-one id="listview-buttonset" value="{{activelistView}}">
+        <!-- ko foreach: listViews -->
+        <oj-option disabled='[[disabled]]' value='[[value]]'>
+            <span data-bind="text: label, visible: !disabled"></span>
+        </oj-option>
+        <!-- /ko -->
+    </oj-buttonset-one>
+    <div id="headerWrapper" data-bind="ojModule: { name: 'facturacion_' + activelistView()}"></div>
+    
+        <!-- /ko -->
+</div>

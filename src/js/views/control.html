@@ -1,0 +1,15 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-hybrid-padding">
+    <div id="listview-buttonset" class="oj-buttonset-width-auto" aria-label="Choose only one setting." aria-controls="listview" data-bind="ojComponent: {component: 'ojButtonset', checked: activelistView(), optionChange: handleListViewOptionChange}">
+        <!-- ko foreach: listViews -->
+        <label data-bind="attr: {for: id}"></label>
+        <input type="radio" name="cardStyle" data-bind="value: value, attr: {id: id},
+                   ojComponent: {component: 'ojButton', label: label}" />
+        <!-- /ko -->
+    </div>
+
+    <div id="headerWrapper" data-bind="ojModule: { name: activelistView()}"></div>
+</div>

@@ -1,0 +1,214 @@
+<div data-bind="ojModule: { name: 'dialog_timbre', params: $data }"></div>
+<div id="clients-table-wrapper">
+    <h3>Clientes</h3>
+    <div>
+        <input id="search" maxlength="30" placeholder="Buscar clientes..." , data-bind="ojComponent: {
+                        component: 'ojInputText', value: search_value}" />
+        <oj-button id="clearButton" style="display: inline-block;" on-click='[[getClientesPaging]]' display='icons' chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+        </oj-button>
+        <input id="vales-button" style="margin-top: 0px;" class="oj-margin-top" type="button" data-bind="click: facturaActivos, ojComponent: {component: 'ojButton', disabled: shouldDisableSubmitTimbra(), label: 'Timbra',
+                                rootAttributes: {style:'max-width:100%'}}" />
+    </div>
+    <!-- <oj-button id="clearButton" on-click='[[getClientesPaging]]' display='icons' chroming='half'>
+        <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Buscar
+    </oj-button> -->
+    <oj-table id="clients-paging-table" aria-label="Tabla de clientes" data='[[dataprovider]]' columns='{{clientesColumnArray}}' display='grid' selection="[[currentSelectedClient]]" contextmenu="clientes-contextmenu" selection-mode='{"row": "single"}' style='height: 430px; width: 1px; min-width: 100%;'>
+        <oj-menu id="clientes-contextmenu" slot="contextMenu" on-oj-action="[[contextmenu_clientes_action]]" on-oj-before-open="[[contextmenu_clientes_beforeOpen]]" style="display:none" aria-label="Detalle cliente">
+            <oj-option value="Detalle cliente">Ver datos de facturación</oj-option>
+        </oj-menu>
+        <oj-paging-control id="paging" page-size='10' data='[[dataprovider]]' slot='bottom'>
+    </oj-table>
+    <div id="dialogWrapper">
+        <div style="display:none" id="detalle-cliente-dialog" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', title:'Edición de datos fiscales de ' + telefono(), rootAttributes: { style: 'width: 60vw; min-width 240px; max-width: 400px; min-height: 100px; max-height: 80vh;'}}">
+            <div class="oj-dialog-body">
+                <div class="oj-flex">
+                    <div class="oj-md-6 oj-flex-item">
+                        <label for="credito-formadepago-select">Forma de pago</label>
+                        <select autocomplete="off" required id="credito-formadepago-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: formaPago,
+                            placeholder: 'Selecciona una forma de pago',
+                            rootAttributes: {style:'max-width:100%'},
+                            validators: [{
+                                type: 'regExp', 
+                                options: {
+                                  pattern: '[0-9]{10,10}', 
+                                  messageDetail: 
+                                    ''
+                                }
+                            }]}">
+                            <!-- ko foreach: formasPago -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <br>
+                        <label for="credito-ctabanco-inputtext">Cuenta bancaria</label>
+                        <input autocomplete="off" id="credito-ctabanco-inputtext" type="text" data-bind="ojComponent: {
+                        component: 'ojInputText', 
+                        value: ctaBanco,
+                        validators: [{
+                            type: 'regExp', 
+                            options: {
+                              pattern: '[0-9][0-9][0-9][0-9]', 
+                              messageDetail: 
+                                'Debes ingresar los últimos 4 dígitos de la cuenta bancaria'
+                            }
+                        }]}" />
+                    </div>
+                    <div class="oj-md-6 oj-flex-item">
+                        <label for="credito-usocfdi-select">Uso CFDI</label>
+                        <select autocomplete="off" required id="credito-usocfdi-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: usoCFDI,
+                            placeholder: 'Selecciona un uso de CFDI',
+                            rootAttributes: {style:'max-width:100%'}}">
+                            <!-- ko foreach: usosCFDI -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <div data-bind="visible: rfc() == null">
+                            <label for="rfc-textinput">RFC</label>
+                            <input pattern="([a-zñ\x26A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([a-zA-Z\d]{3})" autocomplete="off" required id="rfc-textinput" type="text" data-bind="ojComponent: {
+                            component: 'ojInputText', 
+                            value: rfc}" />
+                        </div>
+                        <label for="mail-textinput">Correo electrónico</label>
+                        <input autocomplete="off" required id="mail-textinput" type="text" data-bind="ojComponent: {
+                            component: 'ojInputText', 
+                            required: true,
+                            value: mails,
+                            validators: [{
+                                type: 'regExp', 
+                                options: {
+                                  pattern: '([\\w|ñ.+-]+@[\\w.+-]+\.[a-zA-Z0-9]+;)+', 
+                                  messageDetail: 
+                                    'El correo debe terminar en punto y coma, se pueden ingresar varios correos separados por punto y coma'
+                                }
+                            }],
+                            rootAttributes: {style:'width:100%; max-width:100%'}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="oj-dialog-footer">
+                <button id="button-asignarDatosFacturacion" data-bind="click: asignarDatosFacturacion, ojComponent: {component: 'ojButton', label: 'Asignar'}"> </button>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+        <h3>Captura de concepto</h3>
+        <input id="vales-button" style="margin-top: 5px;" type="button" data-bind="click: agregaConcepto, 
+                                ojComponent: {component: 'ojButton', disabled: shouldDisableSubmitAddConcepto(), label: 'Agregar concepto',
+                                rootAttributes: {style:'max-width:100%'}}" />
+    </div>
+    <div class="oj-flex">
+        <div class="oj-md-6 oj-flex-item">
+            <div>
+                <oj-label for="to">Busca producto</oj-label>
+                <input id="descripcion-inputtext" maxlength="30" placeholder="Ingresa descripcion o clave de producto" , data-bind="ojComponent: {
+                value: productoFilter,
+                component: 'ojInputText'}" />
+                <oj-button style="display:inline-block" id="clearButton" on-click='[[getProductos]]' display='icons' chroming='half'>
+                    <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Filtrar
+                </oj-button>
+                <oj-button style="display:inline-block" id="clearButton" on-click='[[resetProductosValues]]' display='icons' chroming='half'>
+                    <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-cross'></span> Borrar filtros
+                </oj-button>
+            </div>
+            <oj-table id="productos-table" aria-label="Productos Tabla" data='[[productosDataProvider]]' columns='{{productosColumnArray}}' display='grid' class="oj-margin-top" style='max-width: 90%;height: 300px;' selection-mode='{"row": "single"}'>
+            </oj-table>
+            <div class="oj-flex oj-margin-top">
+                <div class="oj-md-6 oj-flex-item">
+                    <oj-label for="empresas-select">Empresa</oj-label>
+                    <select autocomplete="off" required id="empresas-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: empresa,
+                            placeholder: 'Selecciona una unidad',
+                            rootAttributes: {style:'max-width:100%'}}">
+                        <!-- ko foreach: empresas -->
+                        <option data-bind="value:value, text:label"></option>
+                        <!-- /ko -->
+                    </select>
+                    <oj-label for="precioUnitario-inputnumber">Precio unitario</oj-label>
+                    <input id="precioUnitario-inputnumber" required maxlength="30" placeholder="Ingresa precio unitario" , data-bind="ojComponent: {
+                        value: precioUnitario,
+                        component: 'ojInputText',
+                        rootAttributes: {style:'max-width:100%'},
+                        validators: [{
+                            type: 'regExp', 
+                            options: {
+                              pattern: '[0-9]*\.?[0-9]+', 
+                              messageDetail: 
+                                ''
+                            }
+                        }]}" />
+                    <div data-bind="visible: isArrendamiento()">
+                        <oj-label for="to">Cuenta predial</oj-label>
+                        <div>
+                            <input  id="cuentapredial-inputtext" maxlength="30" placeholder="Ingresa la cuenta predial" data-bind="ojComponent: {
+                        value: cuentaPredial,
+                        required: true,
+                        component: 'ojInputText'}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="oj-md-6 ">
+                    <oj-label for="to">Cantidad</oj-label>
+                    <div>
+                        <input id="cantidad-inputtext" maxlength="30" placeholder="Ingresa cantidad" data-bind="ojComponent: {
+                        value: cantidad,
+                        component: 'ojInputText',
+                        validators: [{
+                            type: 'regExp', 
+                            options: {
+                              pattern: '[0-9]*\.?[0-9]+', 
+                              messageDetail: 
+                                ''
+                            }
+                        }]}" />
+                    </div>
+                    <oj-label for="to">Descripción</oj-label>
+                    <div>
+                        <input id="descripcion-inputtext" maxlength="40" placeholder="Ingresa la descripcion" , data-bind="ojComponent: {
+                        value: descripcion,
+                        component: 'ojInputText'}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="oj-md-6 oj-flex-item">
+            <div>
+                <oj-label for="to">Busca unidad</oj-label>
+                <input id="unidad-inputtext" maxlength="30" placeholder="Ingresa descripcion o clave de unidad" , data-bind="ojComponent: {
+                        value: unidadesFilter,
+                        component: 'ojInputText'}" />
+                <oj-button style="display:inline-block" id="clearButton" on-click='[[getUnidades]]' display='icons' chroming='half'>
+                    <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-magnifier'></span> Filtrar
+                </oj-button>
+                <oj-button style="display:inline-block" id="clearButton" on-click='[[resetUnidadesValues]]' display='icons' chroming='half'>
+                    <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-cross'></span> Borrar filtros
+                </oj-button>
+            </div>
+            <oj-table id="unidades-table" aria-label="Unidades Tabla" data='[[unidadesDataProvider]]' columns='{{unidadesColumnArray}}' display='grid' class="oj-margin-top" style='max-width: 90%;height: 300px;' selection-mode='{"row": "single"}'>
+            </oj-table>
+        </div>
+    </div>
+    <h3>Conceptos a facturar</h3>
+    <!-- ko foreach: conceptos -->
+    <div style="display: flex; justify-content: space-between;">
+        <div class="oj-panel" style="width: 99%;">
+            <i data-bind="text: 'Producto: ' + claveprodserv + ', precio unitario: ' + valorUnitario + ', cantidad: ' + cantidad + ', unidad: ' + unidad"></i>
+        </div>
+        <oj-button style="margin-top: 5px;" id="clearButton" on-click='[[$parent.deleteConcepto.bind(this, $index(), $data)]]' display='icons' chroming='half'>
+            <span slot='startIcon' class='oj-fwk-icon oj-fwk-icon-cross'></span> Borrar filtros
+        </oj-button>
+    </div>
+    <!-- /ko -->
+    <!-- ko if: conceptos().length == 0 -->
+    <div class="oj-panel" style="width: 100%;">
+        <i data-bind="text: 'No se ha agregado ningún concepto'"> </i>
+    </div>
+    <!-- /ko -->
+</div>
+<!-- <div data-bind="ojModule: { name: 'dialog_timbre', params: promiseVales}"></div> -->
+<!-- <div data-bind="ojModule: { name: 'dialog_datosFiscales', params: datosFiscalesParams}"></div> -->

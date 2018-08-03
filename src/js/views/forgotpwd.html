@@ -1,0 +1,42 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-flex ">
+    <div class="oj-flex-item oj-md-4"></div>
+    <div class="oj-flex-item oj-md-center oj-md-4 oj-flex oj-md-flex-direction-column oj-md-flex-wrap-nowrap">
+        <div class="demo-circle-flex-item oj-flex-item  oj-flex ">
+        </div>
+        <div class="oj-flex-item">
+            <div id="panel-container" class="oj-panel oj-panel-shadow-md oj-sm-margin-2x demo-panel-customizations">
+                    <h3 class="demo-signin-appname">Recupera tu contraseña</h3>
+                    <p>Ingresa el correo que asignaste a tu cuenta al momento de registrarte.</p>
+                    <input autocomplete="off" required id="mail-textinput" type="text" data-bind="ojComponent: {
+                    component: 'ojInputText', 
+                    value: mail,
+                    placeholder: 'Correo electrónico',
+                    validators: [{
+                        type: 'regExp', 
+                        options: {
+                          pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}', 
+                          messageDetail: 
+                            'Debe ingresar el formato correcto para un correo electrónico'
+                        }
+                    }],
+                    invalidComponentTracker: tracker,
+                    rootAttributes: {style:'width:100%; max-width:100%'}}" />
+                    <input id="submit-button" class="oj-margin-top" type="button" data-bind="click: submit, ojComponent: {component: 'ojButton', label: 'Ingresar', disabled: shouldDisableSubmit(), rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                    <div style="display:none;" id="submit-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'start', vertical: 'top'}, at: {horizontal: 'end', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        Correo enviado con éxito!
+                    </div>
+                    <div style="display:none;" id="email-error-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                        No hay una cuenta registrada con ese correo
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

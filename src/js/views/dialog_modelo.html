@@ -1,0 +1,57 @@
+<div id="dialog-modelo-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogWrapper">
+            <oj-dialog style="display:none" on-oj-before-open='[[beforeOpen]]' id="dialog-modelo">
+                <div slot="header" class="oj-helper-clearfix"> <span id="dialogTitleId" data-bind="text: 'Alta de modelo'" class="oj-dialog-title"> </span> </div>
+                <div slot="body">
+                    <div class="oj-flex oj-padding-top  oj-flex-items-pad">
+                        <label for="nombre-textinput">Modelo</label>
+                        <input id="nombre-textinput" type="text" data-bind="ojComponent: {
+                                component: 'ojInputText', 
+                                rootAttributes: {style: 'max-width:100%'},
+                                value: nombre}" />
+                        <label for="acciones-select">Acción</label>
+                        <select autocomplete="off" ultimasLecturas id="acciones-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: accion,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una acción...'}">
+                            <!-- ko foreach: acciones -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <label for="medidas-select">Medida</label>
+                        <select autocomplete="off" ultimasLecturas id="medidas-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: medida,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una medida...'}">
+                            <!-- ko foreach: medidas -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                        <label for="marcas-select">Marca</label>
+                        <select autocomplete="off" ultimasLecturas id="marcas-select" data-bind="ojComponent: {
+                                component: 'ojSelect',  
+                                value: marca,
+                                rootAttributes: {style: 'max-width:100%'},
+                                placeholder: 'Selecciona una marca...'}">
+                            <!-- ko foreach: marcas -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                    </div>
+                </div>
+                <div slot="footer">
+                    <oj-button id="okButton-modelo" style="width: 100%;max-width: 100%;" disabled=[[shouldDisableSubmit()]] data-bind="click: submit "> OK </oj-button>
+                </div>
+                <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    modelo de mes insertados con éxito!
+                </div>
+                <div style="display:none;" id="failure-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    No se pudieron insertar los modelo de mes
+                </div>
+            </oj-dialog>
+        </div>
+    </div>
+</div>

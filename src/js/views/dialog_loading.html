@@ -1,0 +1,20 @@
+<div id="dialog-loading-wrapper">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+        <div id="dialogLoadingWrapper">
+            <oj-dialog style="display:none" cancel-behavior='none' on-oj-before-open='[[beforeOpen]]' id="dialog-loading" oj-dialog-header='[[title]]'>
+                <div slot="header" class="oj-helper-clearfix">
+                    <span id="dialogTitleId" data-bind="text: title" class="oj-dialog-title">
+                    </span>
+                </div>
+                <div slot="body">
+                    <center>
+                        <oj-progress style="width:35px;height:35px;padding-top:15px;" class="oj-progress-bar-embedded" type='circle' id="progressbar" value="-1">
+                        </oj-progress>
+                    </center>
+                </div>
+                <div slot="footer">
+                </div>
+            </oj-dialog>
+        </div>
+    </div>
+</div>

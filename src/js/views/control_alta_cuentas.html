@@ -1,0 +1,70 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="oj-flex ">
+    <div class="oj-flex-item oj-md-4"></div>
+    <div class="oj-flex-item oj-md-center oj-md-4 oj-flex oj-md-flex-direction-column oj-md-flex-wrap-nowrap">
+        <div class="demo-circle-flex-item oj-flex-item  oj-flex ">
+        </div>
+        <div class="oj-flex-item">
+            <div id="panel-container" class="oj-panel oj-panel-shadow-md oj-sm-margin-2x demo-panel-customizations">
+                <label for="username-textinput">Número de empleado</label>
+                <input autocomplete="off" required id="username-textinput" type="text" data-bind="ojComponent: { component: 'ojInputText', value: numemp, validators: [{ type: 'regExp', options: { pattern: '[0-9]{1,}', messageDetail: 'Solo se aceptan números' } }], invalidComponentTracker: tracker, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                <label for="mail-textinput">Correo electrónico</label>
+                <input autocomplete="off" required id="mail-textinput" type="text" data-bind="ojComponent: {
+            component: 'ojInputText', 
+            value: mail,
+            validators: [{
+                type: 'regExp', 
+                options: {
+                  pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}', 
+                  messageDetail: 
+                    'Debe ingresar el formato correcto para un correo electrónico'
+                }
+            }],
+            invalidComponentTracker: tracker,
+            rootAttributes: {style:'width:100%; max-width:100%'}}" />
+                <label for="priv-select">Nivel de privilegio</label>
+                <select required autocomplete="off" id="priv-select" data-bind="ojComponent: {
+                component: 'ojSelect',  
+                value: privilegio,
+                placeholder: 'Selecciona un nivel de privilegio',
+                rootAttributes: {style:'max-width:100%'},
+                invalidComponentTracker: tracker}">
+                    <!-- ko foreach: privilegios -->
+                    <option data-bind="value:value, text:label"></option>
+                    <!-- /ko -->
+                </select>
+                <label for="plantas-select">Planta</label>
+                <select required autocomplete="off" id="plantas-select" data-bind="ojComponent: {
+                component: 'ojSelect',  
+                value: planta,
+                placeholder: 'Selecciona una planta',
+                rootAttributes: {style:'max-width:100%'},
+                invalidComponentTracker: tracker}">
+                    <!-- ko foreach: plantas -->
+                    <option data-bind="value:value, text:label"></option>
+                    <!-- /ko -->
+                </select>
+                <label for="pwd-textinput">Contraseña</label>
+                <input autocomplete="off" required id="pwd-textinput" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: pwd, title: '\x3Chtml>Debe contener al menos<b> 6 caracteres</b> incluído <b>un número, una letra mayúscula y una minúscula</b>\x3C/html>', validators: [{ type: 'regExp', options : { pattern: '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}', messageSummary : 'La contraseña es muy débil', messageDetail: '\x3chtml\x3e Debe ingresar una contraseña que cumpla con nuestros \x3cb\x3eniveles de seguridad.\x3c/b\x3e \x3c/html\x3e'} }], invalidComponentTracker: tracker, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                <label for="pwdRepeat-textinput">Confirma contraseña</label>
+                <input autocomplete="off" required id="pwdRepeat-textinput" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: pwdRepeat, validators: [equalToPassword], invalidComponentTracker: tracker, rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                <input id="submit-button" class="oj-margin-top" type="button" data-bind="click: submit, ojComponent: {component: 'ojButton', label: 'Crear cuenta', disabled: shouldDisableSubmit(), rootAttributes: {style: 'width:100%; max-width:100%'}}" />
+                <div style="display:none;" id="success-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    Cuenta creada con éxito!
+                </div>
+                <div style="display:none;" id="nomatch-numemp-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    No existe numero ese empleado, por favor intenta con otro
+                </div>
+                <div style="display:none;" id="duplicate-numemp-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    Ya hay una cuenta registrada con ese número de empleado, por favor intenta con otro
+                </div>
+                <div style="display:none;" id="duplicate-email-popup" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {style: 'overflow:hidden'}, position: {my: {horizontal: 'left', vertical: 'top'}, at: {horizontal: 'left', vertical: 'bottom'}}, animateStart: 'expand', animateEnd: 'collapse'}">
+                    Ya existe una cuenta registrada con ese correo, por favor intenta con otro
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
