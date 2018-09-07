@@ -50,6 +50,26 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                     },
                     error: function(collection, xhr, options) {}
                 });
+
+                $.ajax({
+                    method: "GET",
+                    url: "https://gaslicuadosabinas.com/api.php/empresa?transform=1",
+                    success: function(data) {
+                        var data = data.empresa;
+                        var arr = [];
+                        if (typeof data == 'object') {
+                            data.forEach(function(empresa) {
+                                var obj = {};
+                                obj['value'] = empresa.empresa;
+                                obj['label'] = empresa.nombre;
+                                arr.push(obj);
+                            })
+                            self.empresas(arr);
+                        }
+                    }
+                }).done(function(data) {
+                    $('#empresas-select').ojSelect("refresh");
+                });
             }
 
 
@@ -69,6 +89,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
             self.desglose_vales = ko.observable();
             self.serie = ko.observable();
             self.paramsDialog = ko.observable();
+            self.empresa = ko.observable();
+            self.empresas = ko.observableArray([]);
 
             self.porFacturarArray = ko.observableArray([]);
             self.aFacturarArray = ko.observableArray([]);
@@ -213,6 +235,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 return new Promise((resolve, reject) => {
                     var data;
                     if (!self.showRemisiones()) {
+                        var tipoComprobante = getTipoComprobante();
                         data = {
                             'rfc': self.selectedFactura.rfc.toUpperCase().trim(),
                             'email': self.selectedFactura.mails,
@@ -220,9 +243,11 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                             'formapago': self.selectedFactura.formapago,
                             'usocfdi': self.selectedFactura.usocfdi,
                             'metodopago': self.selectedFactura.metodopago,
+                            'tipocomprobante': tipoComprobante,
                             'planta': localStorage.getItem("planta"),
                             'uuid': self.selectedFactura.uuid,
                             'telefono': self.selectedFactura.telefono,
+                            'empresa': self.empresa()[0],
                             'uuid_factura': self.uuid,
                             "descripcion": self.descripcion(),
                             'tipo': "notacredito",
@@ -297,7 +322,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                                 }
                                 $.ajax({
                                     method: "POST",
-                                    url: "https://198.100.45.73/servicesFacturador/factura.php",
+                                    url: "https://198.100.45.73/servicesFacturador/dev_factura.php",
                                     data: data,
                                     success: function(data) {
                                         resolve(data);
@@ -385,6 +410,14 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
 
             }
 
+            function getTipoComprobante() {
+                var neto = 0;
+                for (const value of self.conceptosArray()) {
+                    neto += parseFloat(value.importe - value.importeCalculado);
+                }
+                return neto >= 0 ? 'E' : 'I';
+            }
+
             self.porFacturarSelectionListener = function(event) {
                 var data = event.detail;
                 if (event.type == 'selectionChanged' && data['value'] != null) {
@@ -466,7 +499,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
 
             self.shouldDisableSubmit = function() {
                 var shouldDisable = false;
-                if (self.conceptosArrayOriginal().length > 0) {
+                if (self.conceptosArrayOriginal().length > 0 && self.empresa()) {
                     self.conceptosArray().forEach(function(concepto, i) {
                         var totalConcepto = concepto.cantiidad * concepto.valorunitario;
                         var totalConceptoOriginal = self.conceptosArrayOriginal()[i].cantiidad * self.conceptosArrayOriginal()[i].valorunitario;

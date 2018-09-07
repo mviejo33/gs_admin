@@ -48,6 +48,9 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 app.verifyPermissions();
                 // var d1 = $.Deferred();
 
+                initializeResumenMesTable();
+                initializeDetalleMesTable();
+
                 var table = document.getElementById('resumenmes-paging-table');
                 table.addEventListener('selectionChanged', self.resumenMesSelectionListener);
                 table = document.getElementById('detallemes-paging-table');
@@ -91,8 +94,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 }
 
 
-                initializeResumenMesTable();
-                initializeDetalleMesTable();
+
             }
 
 
@@ -144,7 +146,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                     comparator: "id",
                     model: cortesModel
                 });
-
                 self.collectionCortes(new cortesCollection);
                 self.datasourceCortes(new oj.CollectionTableDataSource(self.collectionCortes()));
                 self.dataproviderCortes(new oj.PagingTableDataSource(self.datasourceCortes()));
@@ -157,7 +158,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
 
             var latestParamsCortes = "";
             self.getCortesPaging = function(event, d1) {
-                // latestParamsCortes = self.searchValueCortes();
+                // latestParamsCortes = filterCortes();
                 var myCollection = self.collectionCortes();
                 myCollection.refresh();
                 if (d1)
@@ -212,6 +213,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                         url += "&offset=" + offset + "&limit=" + fetchSize;
                     }
                 }
+                console.log(url);
                 return url;
             }
 
@@ -222,7 +224,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
 
             function initializeResumenMesTable() {
                 var resumenMesCollection, collection, resumenMesModel, pagingDatasource;
-                var fetchSize = 10;
+                var fetchSize = 30;
                 resumenMesModel = oj.Model.extend({
                     url: "",
                     fetchSize: fetchSize,
@@ -342,7 +344,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
             }
 
             function getUrlResumenMes(operation, collection, options) {
-                var fetchSize = 10;
+                var fetchSize = 30;
                 var url = "";
 
                 if (operation === "read") {
@@ -556,6 +558,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 if (ref == 1) {
                     if (self.collectionDetalleMes()) {
                         //workaround for ojcollection reset
+                        self.searchValueDetalleMes('');
                         $('#detallemes-paging-table').find('.oj-table-body').html('');
                     }
                 }
@@ -572,6 +575,41 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 self.tableDoArray([]);
                 self.table2DoArray([]);
                 self.tablePoArray([]);
+                self.table2PoArray([]);
+            }
+
+            function resetValues1(ref) {
+                if (ref == 1) {
+                    if (self.collectionDetalleMes()) {
+                        //workaround for ojcollection reset
+                        self.searchValueDetalleMes('');
+                        $('#detallemes-paging-table').find('.oj-table-body').html('');
+                    }
+                }
+                if (self.collectionCortes()) {
+                    //workaround for ojcollection reset
+                    $('#cortesTable').find('.oj-table-body').html('');
+                    self.collectionCortes(undefined);
+                }
+                self.tablePaArray([]);
+                self.tableTrArray([]);
+                self.tableDoArray([]);
+                self.tablePoArray([]);
+            }
+
+            function resetValues2(ref) {
+                if (ref == 1) {
+                    if (self.collectionDetalleMes()) {
+                        //workaround for ojcollection reset
+                        self.searchValueDetalleMes('');
+                        $('#detallemes-paging-table').find('.oj-table-body').html('');
+                    }
+                }
+
+                self.table2CoArray([]);
+                self.table2PaArray([]);
+                self.table2TrArray([]);
+                self.table2DoArray([]);
                 self.table2PoArray([]);
             }
 
@@ -698,6 +736,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                     type: self.activeTable(),
                     ref: self.detalleMesParams.id
                 }
+
                 $.when($.ajax({
                         method: "POST",
                         url: "https://gaslicuadosabinas.com/servicesAdmin/getDynamicTableData.php",
@@ -708,11 +747,18 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                             if (Array.isArray(data)) {
                                 switch (self.activeTable()) {
                                     case 'cortes':
+                                        // if (self.collectionCortes()) {
+                                        // self.getCortesPaging();
+                                        // } else {
+                                        // self.collectionCortes(undefined);
+                                        // self.datasourceCortes(undefined);
+                                        // self.dataproviderCortes(undefined);
                                         initializeCortesTable();
+                                        // }
                                         // var dataClone = Array.prototype.slice.call(data);
                                         // self.tableCoArrayOriginal(data.slice(0));
                                         // self.tableCoArray(JSON.parse(JSON.stringify(data)));
-                                        table.selection = null;
+                                        // table.selection = null;
                                         break;
                                     case 'dolares':
                                         self.tableDoArray(data);
@@ -732,7 +778,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                                         break;
                                 }
                             } else {
-                                resetValues();
+                                resetValues1();
                             }
                         }
                     }), $.ajax({
@@ -766,7 +812,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                                         break;
                                 }
                             } else {
-                                resetValues();
+                                resetValues2();
                             }
                         }
                     })
@@ -783,7 +829,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 if (self.activeTable() != 'cortes') {
                     return { "row": "single", "column": "multiple" };
                 } else {
-                    return null;
+                    return { "row": "single", "column": "multiple" };
                 }
             }
 
@@ -864,6 +910,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                     success: function(data) {
                         if (data.includes("allgood")) {
                             var d1 = $.Deferred(),
+                                d3 = $.Deferred(),
                                 d2 = $.Deferred();
                             openLoadingDialog([d1, d2, d3]);
                             // getResumenAnoByAno(self.ano()["0"], d1);
@@ -953,7 +1000,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                 var rowIdx = event.detail.rowContext.status.rowIndex;
 
                 self.collectionCortes().get(rowKey).then(function(value) {
-                    console.log(value);
                     self.previousEditValue = value.attributes.x_asignar;
                 });
             }
@@ -967,7 +1013,6 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                         var row = value.attributes;
 
                         //default es el menor entre el x_asignar pago y el x_asignar de remision y no pasarse de ese num
-                        console.log(row.x_asignar);
                         var upperLimit = Math.min(self.previousEditValue, self.detalleMesParams.x_concilar);
 
                         if (row.x_asignar > upperLimit || row.x_asignar <= 0) {
@@ -1001,7 +1046,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                                     // getResumenAnoByAno(self.ano()["0"], d1);
                                     self.getResumenMesPaging(undefined, d1);
                                     self.getDetalleMesPaging(undefined, d2);
-                                    self.getCortesPaging(undefined, d3);
+                                    fillDynamicTable(d3);
                                 }
                             }
                         })
@@ -1433,16 +1478,16 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'appController', 'ojs/ojswitch', 'oj
                     field: "corte"
                 },
                 {
-                    headerText: "Abono",
+                    headerText: "PorCorte",
                     sortable: "disabled",
                     resizable: "enabled",
-                    field: "abono"
+                    field: "x_corte"
                 },
                 {
-                    headerText: "Conciliado",
+                    headerText: "PorDepósito",
                     sortable: "disabled",
                     resizable: "enabled",
-                    field: "concliado"
+                    field: "x_depsoto"
                 }
             ];
 

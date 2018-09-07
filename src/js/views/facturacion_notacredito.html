@@ -20,6 +20,16 @@
                         component: 'ojInputText'
                        }" />
             </div>
+            <oj-label for="empresas-select">Empresa</oj-label>
+            <select autocomplete="off" required id="empresas-select" data-bind="ojComponent: {
+                            component: 'ojSelect',  
+                            value: empresa,
+                            placeholder: 'Selecciona una unidad',
+                            rootAttributes: {style:'max-width:100%'}}">
+                <!-- ko foreach: empresas -->
+                <option data-bind="value:value, text:label"></option>
+                <!-- /ko -->
+            </select>
             <oj-label for="switch-remisiones" class="oj-label oj-label-inline">Vista por remisiones</oj-label>
             <oj-switch style="margin-bottom: 3px;" id="switch-virtual" value="{{showRemisiones}}"></oj-switch>
             <br>
